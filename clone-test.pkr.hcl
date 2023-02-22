@@ -113,6 +113,9 @@ source "vsphere-clone" "clone_test" {
   vm_name                      = var.vm_name
   resource_pool                = var.vsphere_resource_pool
 
+  # once the test is done we don't need the vm
+  destroy_vm = true
+
   cd_content = {
     "/user-data"       = local.base_cloudinit,
     "/meta-data"       = "",
