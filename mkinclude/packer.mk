@@ -20,7 +20,7 @@ packer.initialized: $(PACKER) vsphere.pkr.hcl
 	mv packer.log $@
 
 tmp/packer_$(PACKER_VERSION)_$(OS)_$(ARCH).zip:
-	wget -nv https://releases.hashicorp.com/packer/$(PACKER_VERSION)/$@
+	wget -nv https://releases.hashicorp.com/packer/$(PACKER_VERSION)/packer_$(PACKER_VERSION)_$(OS)_$(ARCH).zip -O $@
 
 $(PACKER): tmp/packer_$(PACKER_VERSION)_$(OS)_$(ARCH).zip
 	unzip -n $<;
