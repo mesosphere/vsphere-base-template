@@ -1,0 +1,7 @@
+!.gitkeep
+/manifests/*.json
+/export/**
+/packer*
+/govc*
+/tmp
+

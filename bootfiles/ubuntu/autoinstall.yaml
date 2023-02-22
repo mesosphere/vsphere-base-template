@@ -1,0 +1,38 @@
+#cloud-config
+autoinstall:
+  version: 1
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+      - arches: [amd64, i386]
+        uri: http://us.archive.ubuntu.com/ubuntu
+      - arches: [default]
+        uri: http://ports.ubuntu.com/ubuntu-ports
+  early-commands:
+    - sudo systemctl stop ssh
+  locale: en_US
+  keyboard:
+    layout: us
+  identity:
+    hostname: ubuntu
+    username: ${ssh_username}
+    password: $6$${sha512_fake_pw}
+  ssh:
+    install-server: true
+    allow-pw: false
+    authorized-keys:
+      - "${public_key}"
+  storage:
+    layout:
+        name: lvm
+  packages:
+    - openssh-server
+    - open-vm-tools
+    - cloud-init
+  user-data:
+    disable_root: true
+    timezone: Etc/UTC
+  late-commands:
+    - echo '${ssh_username} ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/${ssh_username}
+    - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/${ssh_username}
