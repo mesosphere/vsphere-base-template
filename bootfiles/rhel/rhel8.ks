@@ -50,6 +50,7 @@ sed
 sudo
 python3
 open-vm-tools
+cloud-init
 # Exclude unnecessary firmwares
 -iwl*firmware
 %end

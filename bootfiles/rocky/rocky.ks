@@ -54,6 +54,7 @@ sed
 sudo
 python3
 open-vm-tools
+
 # Exclude unnecessary firmwares
 -iwl*firmware
 %end
@@ -73,7 +74,7 @@ chmod 440 /etc/sudoers.d/${ssh_username}
 dnf makecache
 dnf install epel-release -y
 dnf makecache
-dnf install -y sudo open-vm-tools perl
+dnf install -y sudo open-vm-tools perl cloud-init cloud-utils-growpart
 
 # Disable swap
 swapoff -a

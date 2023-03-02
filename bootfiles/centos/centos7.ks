@@ -5,6 +5,7 @@ cdrom
 text
 # set mirror
 url --mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
+
 # Do not install an X server
 skipx
 # Configure the locale/keyboard
@@ -27,9 +28,10 @@ eula --agreed
 # Create a single partition with no swap space
 bootloader --location=mbr
 zerombr
+
 clearpart --all --initlabel
 part / --grow --asprimary --fstype=ext4 --label=slash
-%packages --ignoremissing --excludedocs
+%packages --excludedocs
 openssh-server
 sed
 sudo
@@ -42,6 +44,7 @@ sudo
 services --enabled=sshd
 # Perform a reboot once the installation has completed
 reboot
+
 # The %post section is essentially a shell script
 %post --erroronfail
 # Update the root certificates
@@ -49,8 +52,9 @@ update-ca-trust force-enable
 # Passwordless sudo for the user '${ssh_username}'
 echo '${ssh_username} ALL=(ALL) NOPASSWD: ALL' >/etc/sudoers.d/${ssh_username}
 chmod 440 /etc/sudoers.d/${ssh_username}
-# Install open-vm-tools
-yum install -y open-vm-tools
+# Install image tools
+yum install -y open-vm-tools cloud-init cloud-utils-growpart dracut-modules-growroot
+
 # Remove the package cache
 yum -y clean all
 # Disable swap

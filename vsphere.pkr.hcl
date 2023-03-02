@@ -5,7 +5,7 @@ packer {
       source  = "github.com/ivoronin/sshkey"
     }
     vsphere = {
-      version = ">= 0.0.1"
+      version = ">= 1.1.1"
       source  = "github.com/hashicorp/vsphere"
     }
   }
@@ -150,7 +150,14 @@ variable "dry_run" {
   default = false
 }
 
-data "sshkey" "install" {}
+variable "manifest_output" {
+  type    = string
+  default = ""
+}
+
+data "sshkey" "install" {
+  name = "base-image-build"
+}
 
 # All locals variables are generated from variables that uses expressions
 # that are not allowed in HCL2 variables.
@@ -342,11 +349,6 @@ source "vsphere-iso" "baseimage" {
   vcenter_server              = var.vcenter_server
   vm_name                     = local.vm_name
 
-  storage {
-      disk_size = 40000
-  }
-
-
   create_snapshot     = !var.dry_run
   convert_to_template = !var.dry_run
 }
@@ -374,23 +376,36 @@ locals {
       "${path.root}/scripts/el/cleanup_dnf.sh"
     ],
   }
-  build_scripts = lookup(local.distro_build_scripts, "${var.distribution}-${var.distribution_version}", lookup(local.distro_build_scripts, "${var.distribution}", []))
+
+  common_pre_distro = []
+  common_post_distro = [
+    "${path.root}/scripts/common/clean_authorized_keys.sh",
+    "${path.root}/scripts/common/finish_cloud_init.sh"
+    ]
+  build_scripts_distro = lookup(local.distro_build_scripts, "${var.distribution}-${var.distribution_version}", lookup(local.distro_build_scripts, "${var.distribution}", []))
+  build_scripts = concat(local.common_pre_distro, local.build_scripts_distro, local.common_post_distro)
 }
 
 build {
   sources = ["source.vsphere-iso.baseimage"]
 
   provisioner "shell" {
-    execute_command = "sudo su -m root -c 'sh -eux {{.Path}}'"
+    env = {
+      BASE_IMAGE_SSH_USER = local.ssh_username
+    }
+    execute_command = "sudo su -m root -c '{{ .Vars }} {{.Path}}'"
     scripts         = local.build_scripts
   }
 
   post-processor "manifest" {
-    output     = "manifests/${local.vm_name}.json"
+    output     = var.manifest_output == "" ? "manifests/${local.vm_name}.json" : var.manifest_output
     strip_path = true
     custom_data = {
-      iso_url      = var.iso_url
-      iso_checksum = var.iso_checksum
+      iso_url       = var.iso_url
+      iso_checksum  = var.iso_checksum
+      template_name = join("/", [var.vsphere_folder, local.vm_name])
+      ssh_username  = local.ssh_username
+      datacenter    = var.vsphere_datacenter
     }
   }
 }

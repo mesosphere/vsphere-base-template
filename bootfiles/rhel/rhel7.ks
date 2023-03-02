@@ -33,6 +33,7 @@ part / --grow --asprimary --fstype=ext4 --label=slash
 openssh-server
 sed
 sudo
+cloud-init
 # Remove unnecessary firmware
 -*-firmware
 # Remove other unnecessary packages

@@ -13,7 +13,7 @@ endif
 
 
 # Path to Terraform binary.
-PACKER ?= ./packer.bin
+PACKER ?= tmp/packer.bin
 
 packer.initialized: $(PACKER) vsphere.pkr.hcl
 	$(PACKER) init vsphere.pkr.hcl | tee packer.log
@@ -23,6 +23,7 @@ tmp/packer_$(PACKER_VERSION)_$(OS)_$(ARCH).zip:
 	wget -nv https://releases.hashicorp.com/packer/$(PACKER_VERSION)/packer_$(PACKER_VERSION)_$(OS)_$(ARCH).zip -O $@
 
 $(PACKER): tmp/packer_$(PACKER_VERSION)_$(OS)_$(ARCH).zip
-	unzip -n $<;
-	mv ./packer $(PACKER);
-	chmod +x $(PACKER);
+	unzip -n $< -d tmp/;
+	chmod +x tmp/packer;
+	cp tmp/packer $@;
+	
