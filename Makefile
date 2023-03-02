@@ -23,13 +23,13 @@ release/d2iq-base-%$(NAME_POSTFIX): manifests/d2iq-base-%$(NAME_POSTFIX).json
 
 ubuntu: manifests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json manifests/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json
 ubuntu-test: manifests/test/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json manifests/test/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json
-ubuntu-release: release/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json release/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json
+ubuntu-release: release/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX) release/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX)
 
 rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
 rocky-test: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
-rocky-release: release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
+rocky-release: release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX) release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
 
 centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-test: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
-centos-release: release/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
+centos-release: release/d2iq-base-CentOS-7.9$(NAME_POSTFIX)
 
