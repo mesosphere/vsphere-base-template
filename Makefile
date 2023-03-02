@@ -17,7 +17,7 @@ manifests/tests/d2iq-base-%$(NAME_POSTFIX).json: manifests/d2iq-base-%$(NAME_POS
 
 .PHONY: release/d2iq-base-%$(NAME_POSTFIX)
 release/d2iq-base-%$(NAME_POSTFIX): manifests/d2iq-base-%$(NAME_POSTFIX).json
-	bash -x mkinclude/helper_deletetemplate.sh $(RELEASE_FOLDER)/$* || true
+	bash -x mkinclude/helper_deletetemplate.sh $(RELEASE_FOLDER)/d2iq-base-$* || true
 	govc object.rename /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(shell jq -r '.builds[0].custom_data.template_name' $<) d2iq-base-$*
 	govc object.mv /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/d2iq-base-$* /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(RELEASE_FOLDER)
 
