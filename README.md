@@ -5,7 +5,9 @@ Please refer to github.com/mesosphere/konvoy-image-builder/ for DKP images
 
 ## Prerequisites
 
-- the tooling expects [jq](https://stedolan.github.io/jq/download/) to be installed.
+- the tooling expects [jq](https://stedolan.github.io/jq/download/) to be installed
+- ensure `make`, `wget` and `unzip
+- ensure to have `mkiso` on the system running this
 - For vsphere connection `VSPHERE_SERVER` `VSPHERE_USER` and `VSPHERE_PASSWORD` environment variables must be set 
 - also `GOVC_URL` must be set. This can be achieved by `export GOVC_URL="${VSPHERE_USER}:${VSPHERE_PASSWORD}@${VSPHERE_SERVER}"`
 
