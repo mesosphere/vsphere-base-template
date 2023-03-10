@@ -46,7 +46,7 @@ variable "vcenter_server" {
 
 variable "vsphere_user" {
   type    = string
-  default = "${env("VSPHERE_USER")}"
+  default = "${env("VSPHERE_USERNAME")}"
 }
 
 variable "vsphere_password" {

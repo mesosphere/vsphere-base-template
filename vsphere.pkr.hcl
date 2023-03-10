@@ -19,7 +19,7 @@ variable "vcenter_server" {
 
 variable "vsphere_user" {
   type    = string
-  default = "${env("VSPHERE_USER")}"
+  default = "${env("VSPHERE_USERNAME")}"
 }
 
 variable "vsphere_password" {
@@ -72,6 +72,12 @@ variable "distribution_version" {
 
 variable "iso_url" {
   type = string
+  default = ""
+}
+
+variable "iso_paths" {
+  type = list(string)
+  default = []
 }
 
 variable "iso_checksum" {
@@ -155,6 +161,30 @@ variable "manifest_output" {
   default = ""
 }
 
+variable "rhn_username" {
+  type = string
+  default = "${env("RHN_USERNAME")}"
+}
+
+variable "rhn_password" {
+  type = string
+  default = "${env("RHN_PASSWORD")}"
+}
+
+variable "rhn_subscription_key" {
+  type = string
+  default = "${env("RHN_SUBSCRIPTION_KEY")}"
+}
+
+variable "rhn_subscription_org" {
+  type = string
+  default = "${env("RHN_SUBSCRIPTION_ORG")}"
+}
+
+variable "iso_path_entry" {
+  default = ""
+}
+
 data "sshkey" "install" {
   name = "base-image-build"
 }
@@ -170,7 +200,7 @@ locals {
 
   # lookup by <distro_name>-<distro_version> fallback to <distro_version>
   distro_version_bootfile_lookup = {
-    "RHEL-7.9"     = "${path.root}/bootfiles/rhel/rhel7.ks"
+    "RHEL-7"     = "${path.root}/bootfiles/rhel/rhel7.ks"
     "RHEL"         = "${path.root}/bootfiles/rhel/rhel8.ks"
     "RockyLinux"   = "${path.root}/bootfiles/rocky/rocky.ks"
     "CentOS"       = "${path.root}/bootfiles/centos/centos7.ks"
@@ -338,6 +368,7 @@ source "vsphere-iso" "baseimage" {
   folder                      = var.vsphere_folder
   insecure_connection         = var.vsphere_insecure_connection
   iso_url                     = var.iso_url
+  iso_paths                   = var.iso_path_entry != "" ? [ var.iso_path_entry ] : var.iso_paths
   iso_checksum                = var.iso_checksum
   password                    = var.vsphere_password
   ssh_private_key_file        = data.sshkey.install.private_key_path
@@ -364,12 +395,18 @@ locals {
       "${path.root}/scripts/el/cleanup_yum.sh"
     ],
     "RHEL-7" = [
+      "${path.root}/scripts/el/rhn_add_subscription.sh",
       "${path.root}/scripts/el/install_open_vm_tools.sh",
-      "${path.root}/scripts/el/cleanup_yum.sh"
+      "${path.root}/scripts/el/install_cloud_tools.sh",
+      "${path.root}/scripts/el/cleanup_yum.sh",
+      "${path.root}/scripts/el/rhn_remove_subscription.sh"
     ],
     "RHEL" = [
+      "${path.root}/scripts/el/rhn_add_subscription.sh",
       "${path.root}/scripts/el/install_open_vm_tools.sh",
-      "${path.root}/scripts/el/cleanup_dnf.sh"
+      "${path.root}/scripts/el/install_cloud_tools.sh",
+      "${path.root}/scripts/el/cleanup_dnf.sh",
+      "${path.root}/scripts/el/rhn_remove_subscription.sh"
     ],
     "RockyLinux" = [
       "${path.root}/scripts/el/install_open_vm_tools.sh",
@@ -392,6 +429,10 @@ build {
   provisioner "shell" {
     env = {
       BASE_IMAGE_SSH_USER = local.ssh_username
+      RHN_USERNAME = var.rhn_username
+      RHN_PASSWORD = var.rhn_password
+      RHN_SUBSCRIPTION_KEY = var.rhn_subscription_key
+      RHN_SUBSCRIPTION_ORG = var.rhn_subscription_org
     }
     execute_command = "sudo su -m root -c '{{ .Vars }} {{.Path}}'"
     scripts         = local.build_scripts

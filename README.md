@@ -18,6 +18,19 @@ Following variables must be set according to structure of the vSphere setup:
 - `PKR_VAR_vsphere_datastore`: the datastore templates and vms are placed on
 - `PKR_VAR_vsphere_network`: a vSphere network which can be reached from the machine running the build ( SSH ports needed )
 
+### RHEL
+For Red Hat Enterprise Linux builds you need to set
+- RHN_USERNAME - as the subscription manager username 
+- RHN_PASSWORD - as the subscription manager password 
+
+or using [Activation Keys](https://access.redhat.com/management/activation_keys) 
+
+- RHN_SUBSCRIPTION_KEY - as the activation key name 
+- RHN_SUBSCRIPTION_ORG - as the activation organisation
+
+To be able to install RHEL you would need to provide an ISO to the vSphere cluster. Download the ISO using your RHN account and upload it to an vSphere datastore.
+
+`PKR_VAR_iso_path_entry="[your-data-store-name] path/to/rhel-server-7.9-x86_64-dvd.iso"` tells packer where to get the ISO from
 
 ## Build
 There are distribution based make targets for building images

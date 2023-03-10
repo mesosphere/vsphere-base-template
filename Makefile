@@ -11,7 +11,7 @@ manifests/d2iq-base-%$(NAME_POSTFIX).json: packer.initialized $(GOVC)
 	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=$(shell basename -s .json $@) -var vm_name_prefix="" -var vm_name_postfix=""   -var-file=./images/base-$*.pkrvar.hcl -var manifest_output=$@ vsphere.pkr.hcl
 
 manifests/tests/d2iq-base-%$(NAME_POSTFIX).json: manifests/d2iq-base-%$(NAME_POSTFIX).json
-	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ clone-test.pkr.hcl
+	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ -on-error=abort clone-test.pkr.hcl
 	bash -x mkinclude/helper_deletetemplate.sh $(shell jq -r '.builds[0].custom_data.template_name' $<)
 	govc vm.destroy /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/test-$(shell basename -s .json $<)
 
@@ -33,3 +33,6 @@ centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-test: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-release: release/d2iq-base-CentOS-7.9$(NAME_POSTFIX)
 
+rhel: manifests/d2iq-base-RHEL-7$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-8$(NAME_POSTFIX).json
+rhel-test: manifests/tests/d2iq-base-RHEL-7$(NAME_POSTFIX).json manifests/tests/d2iq-base-RHEL-8$(NAME_POSTFIX).json
+rhel-release: release/d2iq-base-RHEL-7$(NAME_POSTFIX) release/d2iq-base-RHEL-8$(NAME_POSTFIX)

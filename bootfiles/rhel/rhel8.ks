@@ -11,6 +11,10 @@ lang en_US.UTF-8
 # Keyboard layout
 keyboard --vckeymap=us --xlayouts='us'
 
+
+
+
+
 # Network information
 network --bootproto=dhcp --device=link --activate
 
@@ -41,7 +45,7 @@ zerombr
 clearpart --all --initlabel
 part / --fstype="ext4" --grow --asprimary --label=slash --ondisk=sda
 
-%packages --ignoremissing --excludedocs
+%packages --excludedocs
 # dnf group info minimal-environment
 @^minimal-environment
 @core
@@ -50,7 +54,7 @@ sed
 sudo
 python3
 open-vm-tools
-cloud-init
+
 # Exclude unnecessary firmwares
 -iwl*firmware
 %end
@@ -70,13 +74,13 @@ chmod 440 /etc/sudoers.d/${ssh_username}
 dnf makecache
 dnf install epel-release -y
 dnf makecache
-dnf install -y sudo open-vm-tools perl
+dnf install -y sudo open-vm-tools perl cloud-init cloud-utils-growpart
 
 # Disable swap
 swapoff -a
 rm -f /swapfile
 sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
-sed -i '/^\(HWADDR\|UUID\)=/d' /etc/sysconfig/network-scripts/ifcfg-*
+sed -i '/^\(HWADDR\|UUID\)=/d' /etc/sysconfig/network-scripts/ifcfg-* || true
 %end
 
 # Reboot after successful installation
