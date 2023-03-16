@@ -10,5 +10,6 @@ major_version="$(sed 's/^.\+ release \([.0-9]\+\).*/\1/' /etc/redhat-release | a
 if [ "$major_version" -ge 8 ]; then
     dnf -y install open-vm-tools cloud-init cloud-utils-growpart
 else
-    yum install -y open-vm-tools cloud-init cloud-utils-growpart dracut-modules-growroot
+    # with el7 we install cloud-init from source
+    yum install -y open-vm-tools cloud-utils-growpart dracut-modules-growroot
 fi

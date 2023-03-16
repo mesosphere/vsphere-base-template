@@ -4,7 +4,7 @@ cdrom
 # Perform a text installation
 text
 # set mirror
-url --mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
+url --mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
 
 # Do not install an X server
 skipx
@@ -53,7 +53,7 @@ update-ca-trust force-enable
 echo '${ssh_username} ALL=(ALL) NOPASSWD: ALL' >/etc/sudoers.d/${ssh_username}
 chmod 440 /etc/sudoers.d/${ssh_username}
 # Install image tools
-yum install -y open-vm-tools cloud-init cloud-utils-growpart dracut-modules-growroot
+yum install -y open-vm-tools cloud-utils-growpart dracut-modules-growroot python3 python3-pip
 
 # Remove the package cache
 yum -y clean all

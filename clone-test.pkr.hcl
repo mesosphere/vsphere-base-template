@@ -121,6 +121,21 @@ users:
     ssh_authorized_keys:
       - ${var.ssh_public_key == "" ? data.sshkey.install.public_key : var.ssh_public_key}
 EOF
+  cloudinit_metadata = <<EOF
+instance-id: ${var.vm_name}
+local-hostname: ${var.vm_name}
+network:
+  version: 2
+  ethernets:
+    nics:
+      match:
+        name: ens*
+      dhcp4: yes
+    nics:
+      match:
+        name: eth*
+      dhcp4: yes
+EOF
 }
 
 
@@ -149,17 +164,17 @@ source "vsphere-clone" "clone_test" {
   // destroy = true
   disk_size             = 40960
 
-  cd_label = "cidata"
-  cd_content = {
-    "/user-data"       = local.base_cloudinit,
-    "/user-data.txt"       = local.base_cloudinit,
-    "/meta-data"       = "",
-  }
+  // cd_label = "cidata"
+  // cd_content = {
+  //   "/user-data"       = local.base_cloudinit,
+  //   "/user-data.txt"       = local.base_cloudinit,
+  //   "/meta-data"       = "",
+  // }
 
   configuration_parameters = {
     "guestinfo.userdata" = base64encode(local.base_cloudinit),
     "guestinfo.userdata.encoding" = "base64",
-    "guestinfo.metadata" = ""
+    "guestinfo.metadata" = base64encode(local.cloudinit_metadata)
     "guestinfo.metadata.encoding" = "base64"
   }
 
@@ -184,6 +199,9 @@ build {
     custom_data = {
       template      = local.template
       template_manifest = var.template_manifest
+      template_name = join("/", [var.vsphere_folder, var.vm_name])
+      ssh_username  = local.ssh_username
+      datacenter    = var.vsphere_datacenter
     }
   }
 }
