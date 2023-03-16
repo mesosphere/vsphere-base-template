@@ -1,6 +1,8 @@
 !.gitkeep
 /manifests/*.json
+/manifests/*.json.clean
 /manifests/tests/*.json
+/manifests/tests/*.json.clean
 /export/**
 /packer*
 /govc*

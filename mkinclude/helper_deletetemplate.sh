@@ -15,5 +15,10 @@ if ! govc vm.info ${VMPATH%%/}; then
 fi
 
 esxhost=$(govc vm.info ${VMPATH%%/} | grep 'Host:' | awk '{print $2}')
+if [ "${esxhost}" == "" ]; then
+    echo "VM ${VMPATH%%/} not found"
+    exit 0
+fi
+
 govc vm.markasvm -host=$esxhost -dc=${DATACENTER} ${VMPATH%%/}
 govc vm.destroy ${VMPATH%%/}

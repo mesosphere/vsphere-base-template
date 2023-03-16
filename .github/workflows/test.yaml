@@ -1,0 +1,11 @@
+name: test base images
+
+jobs:
+  base_image_tests:
+    strategy:
+      matrix:
+        os: ["ubuntu", "rocky", "centos", "rhel"]
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
