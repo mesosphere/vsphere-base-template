@@ -58,15 +58,18 @@ centos-test: centos-test-79-clean
 centos-release-79: centos-test-79 release/d2iq-base-CentOS-7.9$(NAME_POSTFIX)
 centos-release: centos-release-79
 
-rhel: manifests/d2iq-base-RHEL-7$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-8$(NAME_POSTFIX).json
-rhel-test-7: manifests/tests/d2iq-base-RHEL-7$(NAME_POSTFIX).json.clean
-rhel-test-7-clean: rhel-test-7 manifests/d2iq-base-RHEL-7$(NAME_POSTFIX).json.clean
-rhel-test-8: manifests/tests/d2iq-base-RHEL-8$(NAME_POSTFIX).json.clean
-rhel-test-8-clean: rhel-test-8 manifests/d2iq-base-RHEL-8$(NAME_POSTFIX).json.clean
-rhel-test: rhel-test-7-clean rhel-test-8-clean
-rhel-release-7: rhel-test-7 release/d2iq-base-RHEL-7$(NAME_POSTFIX)
-rhel-release-8: rhel-test-8 release/d2iq-base-RHEL-8$(NAME_POSTFIX)
-rhel-release: rhel-release-7 rhel-release-8
+rhel: manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json
+rhel-test-79: manifests/tests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
+rhel-test-79-clean: rhel-test-79 manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
+rhel-test-84: manifests/tests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
+rhel-test-84-clean: rhel-test-84 manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
+rhel-test-86: manifests/tests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
+rhel-test-86-clean: rhel-test-86 manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
+rhel-test: rhel-test-79-clean rhel-test-84-clean rhel-test-86-clean
+rhel-release-79: rhel-test-79 release/d2iq-base-RHEL-79$(NAME_POSTFIX)
+rhel-release-84: rhel-test-84 release/d2iq-base-RHEL-84$(NAME_POSTFIX)
+rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
+rhel-release: rhel-release-79 rhel-release-84 rhel-release-86
 
 test-all: ubuntu-test rocky-test centos-test rhel-test
 release: ubuntu-release rocky-release centos-release rhel-release
