@@ -1,7 +1,7 @@
 #!/bin/bash -eux
 
-# ensure vmware datasoruce
-echo 'datasource_list: [ "VMware", "OVF" ]' > /etc/cloud/cloud.cfg.d/99-ovf-data.cfg
+# ensure vmware datasource
+echo 'datasource_list: [ "VMware", "OVF", "VMwareGuestInfo" ]' > /etc/cloud/cloud.cfg.d/99-ovf-data.cfg
 
 echo "Cloud-Init version"
 cloud-init --version
