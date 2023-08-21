@@ -20,11 +20,11 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
       - name: Setup requirements
-        if: ${{ github.event.label.name == 'integration_test' }}
+        if: contains(github.event.pull_request.labels.*.name, 'integration_test')
         run: sudo apt-get update && sudo apt-get install xorriso
       - name: Run integration tests for ${{ matrix.os }}
         run: make ${{ matrix.os }}-test
-        if: ${{ github.event.label.name == 'integration_test' }}
+        if: contains(github.event.pull_request.labels.*.name, 'integration_test')
         env:
           VSPHERE_USERNAME: ${{ secrets.VSPHERE_SRE_USERNAME }}
           VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
