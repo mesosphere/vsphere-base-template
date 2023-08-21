@@ -3,7 +3,6 @@ env:
   PRODUCT_VERSION: "1.8.6"
 on:
   pull_request:
-    types: [ labeled ]
 jobs:
   base_image_tests:
     runs-on: 
