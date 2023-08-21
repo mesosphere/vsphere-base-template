@@ -1,8 +1,10 @@
 name: test base images
-env:
-  PRODUCT_VERSION: "1.8.6"
 on:
   pull_request:
+    types: 
+      - labeled
+      - opened
+      - synchronize
 jobs:
   base_image_tests:
     runs-on: 
@@ -17,6 +19,9 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
+      - name: Setup requirements
+        if: ${{ github.event.label.name == 'integration_test' }}
+        run: sudo apt-get update && sudo apt-get install xorriso
       - name: Run integration tests for ${{ matrix.os }}
         run: make ${{ matrix.os }}-test
         if: ${{ github.event.label.name == 'integration_test' }}
