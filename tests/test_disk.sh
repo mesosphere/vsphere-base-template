@@ -12,3 +12,5 @@ spaceleft=$(parted ${dev} unit GB print free | grep 'Free Space' | tail -n1 | aw
 echo "${spaceleft%.*} in GB on ${dev}"
 
 test "${spaceleft%.*}" -lt "1" || ( echo "ERROR ${spaceleft%.*}GB free space on root device. Growpart not working" && exit 1 )
+
+exit 1
