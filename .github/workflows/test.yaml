@@ -1,11 +1,34 @@
 name: test base images
-
+env:
+  PRODUCT_VERSION: "1.8.6"
+on:
+  pull_request:
+    types: [ labeled ]
 jobs:
   base_image_tests:
+    runs-on: 
+    - self-hosted
+    - small
     strategy:
+      max-parallel: 3
       matrix:
         os: ["ubuntu", "rocky", "centos", "rhel"]
     steps:
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
         with:
-          node-version: ${{ matrix.version }}
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+      - name: Run integration tests for ${{ matrix.os }}
+        run: make ${{ matrix.os }}-test
+        if: ${{ github.event.label.name == 'integration_test' }}
+        env:
+          VSPHERE_USERNAME: ${{ secrets.VSPHERE_SRE_USERNAME }}
+          VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
+          VSPHERE_SERVER: ${{ secrets.VSPHERE_SERVER }}
+          GOVC_URL: ${{ secrets.VSPHERE_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_SERVER }}
+          PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
+          PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
+          PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_DATASTORE }}
+          PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NETWORK }}
+          PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
+
