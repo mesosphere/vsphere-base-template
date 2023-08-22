@@ -1,4 +1,5 @@
 # D2iQ vSphere Base Images
+
 *Disclaimer: this project is being used providing internal base images for vSphere. These are not meant for production use.*
 
 Please refer to github.com/mesosphere/konvoy-image-builder/ for DKP images
@@ -19,7 +20,9 @@ Following variables must be set according to structure of the vSphere setup:
 - `PKR_VAR_vsphere_network`: a vSphere network which can be reached from the machine running the build ( SSH ports needed )
 
 ### RHEL
+
 For Red Hat Enterprise Linux builds you need to set
+
 - RHN_USERNAME - as the subscription manager username 
 - RHN_PASSWORD - as the subscription manager password 
 
@@ -33,6 +36,7 @@ To be able to install RHEL you would need to provide an ISO to the vSphere clust
 `PKR_VAR_iso_path_entry="[your-data-store-name] path/to/rhel-server-7.9-x86_64-dvd.iso"` tells packer where to get the ISO from
 
 ## Build
+
 There are distribution based make targets for building images
 
 - `make ubuntu` - Ubuntu 20.04 and 22.04
@@ -42,9 +46,10 @@ There are distribution based make targets for building images
 
 Templates and VMs are created by default in the folder `build-d2iq-base-templates` This can be changed by injecting the environment variable `VSPHERE_FOLDER`
 
-vm and template names are generated with this schema d2iq-base-<Distro>-<Version>${NAME_POSTFIX} while NAME_POSTFIX is by default `-manual-build-$(shell whoami)` to support local builds. The postfix can be changed by injecting the environment variable `NAME_POSTFIX`
+vm and template names are generated with this schema `d2iq-base-<Distro>-<Version>${NAME_POSTFIX}` while NAME_POSTFIX is by default `-manual-build-$(shell whoami)` to support local builds. The postfix can be changed by injecting the environment variable `NAME_POSTFIX`
 
 ## Test
+
 Like build tests can be executed by distribution. For exmaple `make ubuntu-test`. This will build a template using build steps and afterwards start a new build using the clone method using the previously generated template.
 
 This packer build will execute scripts in ./tests. Whenever the do not exit 0 an error is thrown.
@@ -52,4 +57,5 @@ This packer build will execute scripts in ./tests. Whenever the do not exit 0 an
 After successfully testing a template the test vm and its template are being deleted.
 
 ## Release
+
 The release target for each distribution e.g. `ubuntu-release` will run a normal build process and then rename the instance to delete its build postfix. After renaming the template will be moved from the build folder (`VSPHERE_FOLDER`) into `RELEASE_FOLDER` which is by default `d2iq-base-templates`
