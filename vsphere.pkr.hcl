@@ -143,7 +143,7 @@ variable "firmware" {
 
 variable "ssh_timeout" {
   type    = string
-  default = "10m"
+  default = "30m"
 }
 
 variable "ssh_username" {
