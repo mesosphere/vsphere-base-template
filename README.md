@@ -9,7 +9,7 @@ Please refer to github.com/mesosphere/konvoy-image-builder/ for DKP images
 - the tooling expects [jq](https://stedolan.github.io/jq/download/) to be installed
 - ensure `make`, `wget` and `unzip
 - ensure to have `mkiso` on the system running this
-- For vsphere connection `VSPHERE_SERVER` `VSPHERE_USER` and `VSPHERE_PASSWORD` environment variables must be set 
+- For vsphere connection `VSPHERE_SERVER` `VSPHERE_USER` and `VSPHERE_PASSWORD` environment variables must be set
 - also `GOVC_URL` must be set. This can be achieved by `export GOVC_URL="${VSPHERE_USER}:${VSPHERE_PASSWORD}@${VSPHERE_SERVER}"`
 
 Following variables must be set according to structure of the vSphere setup:
@@ -23,12 +23,12 @@ Following variables must be set according to structure of the vSphere setup:
 
 For Red Hat Enterprise Linux builds you need to set
 
-- RHN_USERNAME - as the subscription manager username 
-- RHN_PASSWORD - as the subscription manager password 
+- RHN_USERNAME - as the subscription manager username
+- RHN_PASSWORD - as the subscription manager password
 
-or using [Activation Keys](https://access.redhat.com/management/activation_keys) 
+or using [Activation Keys](https://access.redhat.com/management/activation_keys)
 
-- RHN_SUBSCRIPTION_KEY - as the activation key name 
+- RHN_SUBSCRIPTION_KEY - as the activation key name
 - RHN_SUBSCRIPTION_ORG - as the activation organisation
 
 To be able to install RHEL you would need to provide an ISO to the vSphere cluster. Download the ISO using your RHN account and upload it to an vSphere datastore.
