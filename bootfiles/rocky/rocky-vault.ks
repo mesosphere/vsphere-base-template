@@ -13,7 +13,7 @@ keyboard --vckeymap=us --xlayouts='us'
 
 # repo setup
 url --url=http://dl.rockylinux.org/vault/rocky/${distribution_version}/BaseOS/x86_64/os/
-repo --name=AppStream --url=http://dl.rockylinux.org/vault/rocky/${distribution_version}/AppStream/x86_64/os/
+repo --name=AppStream --baseurl=http://dl.rockylinux.org/vault/rocky/${distribution_version}/AppStream/x86_64/os/
 
 # Network information
 network --bootproto=dhcp --device=link --activate
