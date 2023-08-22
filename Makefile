@@ -43,9 +43,9 @@ ubuntu-release: ubuntu-release-20 ubuntu-release-22
 
 rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
 rocky-test-87: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
-rocky-test-87-clean: ubuntu-test-20 manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
+rocky-test-87-clean: rocky-test-87 manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
 rocky-test-91: manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
-rocky-test-91-clean: ubuntu-test-20 manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
+rocky-test-91-clean: rocky-test-91 manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
 rocky-test: rocky-test-87-clean rocky-test-91-clean
 rocky-release-87: rocky-test-87 release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
 rocky-release-91: rocky-test-91 release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
