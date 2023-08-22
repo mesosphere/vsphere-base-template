@@ -22,12 +22,6 @@ jobs:
       - name: Checkout konvoy-image-builder repository
         uses: actions/checkout@v3
 
-      - name: Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version-file: 'go.mod'
-          cache: true
-
       - name: Set environment Variables from Dotenv
         uses: c-py/action-dotenv-to-setenv@v4
         with:
