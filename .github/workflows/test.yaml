@@ -37,5 +37,5 @@ jobs:
           PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_DATASTORE }}
           PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NETWORK }}
           PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
-          RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
-          RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
+          RHN_USERNAME: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
+          RHN_PASSWORD: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
