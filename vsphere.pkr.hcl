@@ -200,12 +200,13 @@ locals {
 
   # lookup by <distro_name>-<distro_version> fallback to <distro_version>
   distro_version_bootfile_lookup = {
-    "RHEL-7"     = "${path.root}/bootfiles/rhel/rhel7.ks"
-    "RHEL"         = "${path.root}/bootfiles/rhel/rhel8.ks"
-    "RockyLinux"   = "${path.root}/bootfiles/rocky/rocky.ks"
-    "CentOS"       = "${path.root}/bootfiles/centos/centos7.ks"
-    "Ubuntu"       = "${path.root}/bootfiles/ubuntu/autoinstall.yaml"
-    "Ubuntu-18.04" = "${path.root}/bootfiles/ubuntu/preseed.cfg"
+    "RHEL-7"          = "${path.root}/bootfiles/rhel/rhel7.ks"
+    "RHEL"            = "${path.root}/bootfiles/rhel/rhel8.ks"
+    "RockyLinux"      = "${path.root}/bootfiles/rocky/rocky.ks"
+    "RockyLinux-8.7"  = "${path.root}/bootfiles/rocky/rocky.ks"
+    "CentOS"          = "${path.root}/bootfiles/centos/centos7.ks"
+    "Ubuntu"          = "${path.root}/bootfiles/ubuntu/autoinstall.yaml"
+    "Ubuntu-18.04"    = "${path.root}/bootfiles/ubuntu/preseed.cfg"
   }
 
   el_old_bootcommand = [
