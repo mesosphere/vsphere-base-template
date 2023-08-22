@@ -21,7 +21,9 @@ jobs:
           ref: ${{ github.ref }}
       - name: Setup requirements
         if: contains(github.event.pull_request.labels.*.name, 'integration_test')
-        run: sudo apt-get update && sudo apt-get -y install xorriso
+        run: |
+          sudo apt-get update && sudo apt-get -y install xorriso
+          curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
       - name: Run integration tests for ${{ matrix.os }}
         run: make ${{ matrix.os }}-test
         if: contains(github.event.pull_request.labels.*.name, 'integration_test')
