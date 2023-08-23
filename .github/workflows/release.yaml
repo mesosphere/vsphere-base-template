@@ -96,6 +96,7 @@ jobs:
   artifactinventory:
     name: Create artifact inventory
     runs-on: ubuntu-latest
+    needs: [export]
     outputs:
       listovf: ${{ steps.list.outputs.listovf }}
     steps:
