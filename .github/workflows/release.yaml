@@ -57,6 +57,7 @@ jobs:
         prerelease: false
   export:
     name: Generate OVF for Export
+    needs: [release]
     runs-on: 
     - self-hosted
     - small
