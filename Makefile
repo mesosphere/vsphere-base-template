@@ -22,7 +22,8 @@ manifests/tests/d2iq-base-%$(NAME_POSTFIX).json: manifests/d2iq-base-%$(NAME_POS
 
 manifests/ovf/d2iq-base-%$(NAME_POSTFIX).ovf: manifests/d2iq-base-%$(NAME_POSTFIX).json
 	bash mkinclude/helper_markasvm.sh $(VSPHERE_FOLDER)/d2iq-base-$*
-	$(GOVC) export.ovf -dc=$(shell jq -r '.builds[0].custom_data.datacenter' $<) -vm=$(VSPHERE_FOLDER)/$(shell jq -r '.builds[0].custom_data.template_name' $<) manifests/ovf/
+	$(GOVC) export.ovf -dc=$(shell jq -r '.builds[0].custom_data.datacenter' $<) -vm=$(VSPHERE_FOLDER)/$(shell jq -r '.builds[0].custom_data.template_name' $<) $@
+	tar -czf $@.tar.gz $@/*
 
 # manifests/ova/d2iq-base-%$(NAME_POSTFIX).ova: manifests/ovf/d2iq-base-%$(NAME_POSTFIX).ovf
 # 	tar -cvf $@ $</d2iq-base-$*$(NAME_POSTFIX)/*.ovf $</d2iq-base-$*$(NAME_POSTFIX)/*.vmdk
@@ -61,6 +62,9 @@ rocky-test: rocky-test-87-clean rocky-test-91-clean
 rocky-release-87: rocky-test-87 release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
 rocky-release-91: rocky-test-91 release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
 rocky-release: rocky-release-87 rocky-release-91
+rocky-ovf-87: manifests/ovf/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).ovf
+rocky-ovf-91: manifests/ovf/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).ovf
+rocky-ovf: rocky-ovf-87 rocky-ovf-91
 
 centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-test-79: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
@@ -68,6 +72,8 @@ centos-test-79-clean: centos-test-79 manifests/d2iq-base-CentOS-7.9$(NAME_POSTFI
 centos-test: centos-test-79-clean
 centos-release-79: centos-test-79 release/d2iq-base-CentOS-7.9$(NAME_POSTFIX)
 centos-release: centos-release-79
+centos-ovf-79: manifests/ovf/d2iq-base-CentOS-7.9$(NAME_POSTFIX).ovf
+centos-ovf: centos-ovf-79
 
 rhel: manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json
 rhel-test-79: manifests/tests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
@@ -81,6 +87,10 @@ rhel-release-79: rhel-test-79 release/d2iq-base-RHEL-79$(NAME_POSTFIX)
 rhel-release-84: rhel-test-84 release/d2iq-base-RHEL-84$(NAME_POSTFIX)
 rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
 rhel-release: rhel-release-79 rhel-release-84 rhel-release-86
+rhel-ovf-79: manifests/ovf/d2iq-base-RHEL-79$(NAME_POSTFIX).ovf
+rhel-ovf-84: manifests/ovf/d2iq-base-RHEL-84$(NAME_POSTFIX).ovf
+rhel-ovf-86: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
+rhel-ovf: rhel-ovf-79 rhel-ovf-84 rhel-ovf-86
 
 flatcar: manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
 flatcar-test-3033: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
