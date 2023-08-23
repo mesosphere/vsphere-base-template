@@ -3,6 +3,8 @@
 /manifests/*.json.clean
 /manifests/tests/*.json
 /manifests/tests/*.json.clean
+/manifests/ova/*
+/manifests/ovf/**
 /export/**
 /packer*
 /govc*
