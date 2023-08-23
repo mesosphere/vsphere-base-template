@@ -204,6 +204,7 @@ locals {
     "RHEL"            = "${path.root}/bootfiles/rhel/rhel8.ks"
     "RockyLinux"      = "${path.root}/bootfiles/rocky/rocky.ks"
     "RockyLinux-8.7"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
+    "RockyLinux-9.1"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
     "CentOS"          = "${path.root}/bootfiles/centos/centos7.ks"
     "Ubuntu"          = "${path.root}/bootfiles/ubuntu/autoinstall.yaml"
     "Ubuntu-18.04"    = "${path.root}/bootfiles/ubuntu/preseed.cfg"
