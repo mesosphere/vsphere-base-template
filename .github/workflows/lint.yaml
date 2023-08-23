@@ -1,0 +1,34 @@
+---
+name: Lint
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  super-linter:
+    runs-on: 
+    - self-hosted
+    - small
+    steps:
+      - name: Checkout konvoy-image-builder repository
+        uses: actions/checkout@v3
+
+      - name: Set environment Variables from Dotenv
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: .github/super-linter.env
+
+      - name: Run Super-Linter
+        uses: super-linter/super-linter@v5.2.1
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
