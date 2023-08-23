@@ -20,16 +20,23 @@ manifests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/d2iq-base-%$(NAME_POS
 manifests/tests/d2iq-base-%$(NAME_POSTFIX).json: manifests/d2iq-base-%$(NAME_POSTFIX).json clone-test.pkr.hcl
 	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ -on-error="$(PACKER_ON_ERROR)" clone-test.pkr.hcl
 
+manifests/ovf/d2iq-base-%$(NAME_POSTFIX).ovf: manifests/d2iq-base-%$(NAME_POSTFIX).json
+	bash mkinclude/helper_markasvm.sh $(VSPHERE_FOLDER)/d2iq-base-$*
+	$(GOVC) export.ovf -dc=$(shell jq -r '.builds[0].custom_data.datacenter' $<) -vm=$(VSPHERE_FOLDER)/$(shell jq -r '.builds[0].custom_data.template_name' $<) manifests/ovf/
+
+# manifests/ova/d2iq-base-%$(NAME_POSTFIX).ova: manifests/ovf/d2iq-base-%$(NAME_POSTFIX).ovf
+# 	tar -cvf $@ $</d2iq-base-$*$(NAME_POSTFIX)/*.ovf $</d2iq-base-$*$(NAME_POSTFIX)/*.vmdk
+
 .PHONY: manifests/tests/d2iq-base-%$(NAME_POSTFIX).json.clean
 manifests/tests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/tests/d2iq-base-%$(NAME_POSTFIX).json
-	govc vm.destroy /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/test-$(shell basename -s .json $<)
+	$(GOVC) vm.destroy /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/test-$(shell basename -s .json $<)
 	mv $< $@
 
 .PHONY: release/d2iq-base-%$(NAME_POSTFIX)
 release/d2iq-base-%$(NAME_POSTFIX): manifests/d2iq-base-%$(NAME_POSTFIX).json
 	bash mkinclude/helper_deletetemplate.sh $(RELEASE_FOLDER)/d2iq-base-$* || true
-	govc object.rename /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(shell jq -r '.builds[0].custom_data.template_name' $<) d2iq-base-$*
-	govc object.mv /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/d2iq-base-$* /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(RELEASE_FOLDER)
+	$(GOVC) object.rename /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(shell jq -r '.builds[0].custom_data.template_name' $<) d2iq-base-$*
+	$(GOVC) object.mv /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/d2iq-base-$* /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(RELEASE_FOLDER)
 
 ubuntu: manifests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json manifests/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json
 ubuntu-test-20: manifests/tests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json.clean
@@ -40,6 +47,10 @@ ubuntu-test: ubuntu-test-20-clean ubuntu-test-22-clean
 ubuntu-release-20: ubuntu-test-20 release/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX)
 ubuntu-release-22: ubuntu-test-22 release/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX)
 ubuntu-release: ubuntu-release-20 ubuntu-release-22
+ubuntu-ovf-20: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
+ubuntu-ovf-22: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
+ubuntu-ovf: ubuntu-ovf-20 ubuntu-ovf-22
+
 
 rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
 rocky-test-87: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean

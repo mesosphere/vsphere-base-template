@@ -1,0 +1,40 @@
+---
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  release:
+    runs-on: 
+    - self-hosted
+    - small
+    strategy:
+      fail-fast: false
+      matrix:
+          os: ["ubuntu", "rocky", "centos", "rhel"]
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: ${{ github.ref }}
+    - name: Setup requirements
+      run: |
+        sudo apt-get update && sudo apt-get -y install xorriso
+        curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
+    - name: Run release for ${{ matrix.os }}
+      run: make ${{ matrix.os }}-release
+      env:
+        VSPHERE_USERNAME: ${{ secrets.VSPHERE_SRE_USERNAME }}
+        VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
+        VSPHERE_SERVER: ${{ secrets.VSPHERE_SERVER }}
+        GOVC_URL: ${{ secrets.VSPHERE_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_SERVER }}
+        PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
+        PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
+        PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_DATASTORE }}
+        PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NETWORK }}
+        PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
+        RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
+        RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
+
