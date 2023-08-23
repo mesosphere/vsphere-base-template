@@ -16,8 +16,7 @@ permissions:
 jobs:
   super-linter:
     runs-on: 
-    - self-hosted
-    - small
+    - ubuntu-latest
     steps:
       - name: Checkout konvoy-image-builder repository
         uses: actions/checkout@v3

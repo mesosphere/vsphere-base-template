@@ -5,8 +5,7 @@ on:
 jobs:
   label:
     runs-on: 
-    - self-hosted
-    - small
+    - ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
