@@ -208,6 +208,7 @@ locals {
     "CentOS"          = "${path.root}/bootfiles/centos/centos7.ks"
     "Ubuntu"          = "${path.root}/bootfiles/ubuntu/autoinstall.yaml"
     "Ubuntu-18.04"    = "${path.root}/bootfiles/ubuntu/preseed.cfg"
+    "Flatcar"         = "${path.root}/bootfiles/flatcar/bootfile.sh.tmpl"
   }
 
   el_old_bootcommand = [
@@ -257,6 +258,13 @@ locals {
     "<enter>"
   ]
 
+  flatcar_bootcommand = [
+    "<wait><wait><wait>",
+    "sudo mkdir /bootfiles<enter>",
+    "sudo mount -o loop /dev/sr1 /bootfiles<enter>",
+    "sudo bash /bootfiles/bootfile.sh<enter>",
+  ]
+
   # lookup by <distro_name>-<distro_version> fallback to <distro_name>
   distro_boot_command_lookup = {
     "RHEL-7"       = local.el_old_bootcommand
@@ -266,6 +274,7 @@ locals {
     "Ubuntu-18.04" = local.ubuntu_bionic_bootcommand
     "Ubuntu-20.04" = local.ubuntu_bootcommand
     "Ubuntu-22.04" = local.ubuntu_jammy_bootcommand
+    "Flatcar"      = local.flatcar_bootcommand
   }
 
   default_firmware = "bios"
@@ -282,7 +291,8 @@ locals {
 
   # lookup by <distro_name>-<distro_version> fallback to <distro_version> fallback to ""
   distro_cd_label_lookup = {
-    "Ubuntu" = "cidata"
+    "Ubuntu" = "cidata",
+    "Flatcar" = "cidata"
   }
 
   default_vsphere_guest_os_type = "otherlinux64guest"
@@ -292,6 +302,7 @@ locals {
     "CentOS"     = "centos64Guest",
     "RHEL"       = "rhel7_64Guest"
     "RockyLinux" = "centos64Guest"
+    "Flatcar"    = "otherlinux64Guest"
   }
 
   # lookup by <distro_name>-<distro_version> fallback to <distro_name>
@@ -300,6 +311,7 @@ locals {
     "CentOS"     = "centos",
     "RHEL"       = "eluser"
     "RockyLinux" = "rockstar"
+    "Flatcar"    = "core"
   }
 
   boot_command_distro = lookup(local.distro_boot_command_lookup, "${var.distribution}", [""])
@@ -341,6 +353,7 @@ source "vsphere-iso" "baseimage" {
 
   cd_content = {
     "/bootfile.cfg" = local.bootfile,
+    "/bootfile.sh" = local.bootfile,
     # make it cloud-config compatible
     "/user-data"       = local.bootfile,
     "/meta-data"       = "",
@@ -417,6 +430,7 @@ locals {
       "${path.root}/scripts/el/install_open_vm_tools.sh",
       "${path.root}/scripts/el/cleanup_dnf.sh"
     ],
+    "Flatcar" = []
   }
 
   common_pre_distro = []

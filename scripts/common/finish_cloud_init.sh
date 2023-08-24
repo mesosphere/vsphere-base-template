@@ -1,5 +1,11 @@
 #!/bin/bash -eux
 
+# exit if flatcar
+if [[ $(grep -c Flatcar /etc/os-release) -gt 0 ]]; then
+  # FIXME: this is a workaround for flat car support. We need to find a better way to do this.
+  exit 0
+fi
+
 # ensure vmware datasource
 echo 'datasource_list: [ "VMware", "OVF", "VMwareGuestInfo" ]' > /etc/cloud/cloud.cfg.d/99-ovf-data.cfg
 

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cat <<EOF >/tmp/bootcloudinit.yaml
+#cloud-config
+variant: flatcar
+version: 1.0.0
+kernel_arguments:
+  should_not_exist:
+    - flatcar.autologin
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - "${public_key}"
+EOF
+
+flatcar-install -d /dev/sda -o vmware_raw -c /tmp/bootcloudinit.yaml
+
+reboot
