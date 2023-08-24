@@ -35,6 +35,11 @@ To be able to install RHEL you would need to provide an ISO to the vSphere clust
 
 `PKR_VAR_iso_path_entry="[your-data-store-name] path/to/rhel-server-7.9-x86_64-dvd.iso"` tells packer where to get the ISO from
 
+### Flatcar
+Flatar builds requries ignition templates for boot
+- run `hack/flatcar/build_ignition.sh` to generate ignition configuration at `/tmp/ignition.json`
+- copy the contents of `/tmp/ignition.json` to `bootfiles/flatcar/bootfile.sh.tmpl`
+
 ## Build
 
 There are distribution based make targets for building images
@@ -43,6 +48,7 @@ There are distribution based make targets for building images
 - `make rocky` - Ubuntu 8 and 9
 - `make centos` - Centos 7.9
 - `make rhel` - RHEL 7.9, 8.4, and 8.6
+- `make flatcar` - Flatcar LTS
 
 Templates and VMs are created by default in the folder `build-d2iq-base-templates` This can be changed by injecting the environment variable `VSPHERE_FOLDER`
 

@@ -1,19 +1,46 @@
 #!/bin/bash
 
-cat <<EOF >/tmp/bootcloudinit.yaml
-#cloud-config
-variant: flatcar
-version: 1.0.0
-kernel_arguments:
-  should_not_exist:
-    - flatcar.autologin
-passwd:
-  users:
-    - name: core
-      ssh_authorized_keys:
-        - "${public_key}"
+cat <<EOF >/tmp/ignition.json
+{
+  "ignition": {
+    "config": {},
+    "security": {
+      "tls": {}
+    },
+    "timeouts": {},
+    "version": "2.3.0"
+  },
+  "networkd": {},
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "${public_key}"
+        ]
+      }
+    ]
+  },
+  "storage": {},
+  "systemd": {
+    "units": [
+      {
+        "enable": true,
+        "name": "docker.service"
+      },
+      {
+        "mask": true,
+        "name": "update-engine.service"
+      },
+      {
+        "mask": true,
+        "name": "locksmithd.service"
+      }
+    ]
+  }
+}
 EOF
 
-flatcar-install -d /dev/sda -o vmware_raw -c /tmp/bootcloudinit.yaml
+flatcar-install -d /dev/sda -o vmware_raw -C lts -i /tmp/ignition.json
 
 reboot
