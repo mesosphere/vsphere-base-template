@@ -71,5 +71,8 @@ rhel-release-84: rhel-test-84 release/d2iq-base-RHEL-84$(NAME_POSTFIX)
 rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
 rhel-release: rhel-release-79 rhel-release-84 rhel-release-86
 
+flatcar: $(GOVC)
+	./scripts/flatcar/import.sh
+
 test-all: ubuntu-test rocky-test centos-test rhel-test
-release: ubuntu-release rocky-release centos-release rhel-release
+release: ubuntu-release rocky-release centos-release rhel-release flatcar

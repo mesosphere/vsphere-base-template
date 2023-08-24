@@ -16,7 +16,10 @@ Following variables must be set according to structure of the vSphere setup:
 - `PKR_VAR_vsphere_datacenter`: name of the vsphere datacenter to be used
 - `PKR_VAR_vsphere_cluster`: name of the vsphere cluster to be used
 - `PKR_VAR_vsphere_datastore`: the datastore templates and vms are placed on
-- `PKR_VAR_vsphere_network`: a vSphere network which can be reached from the machine running the build ( SSH ports needed )
+- `PKR_VAR_vsphere_network`: a vSphere network which can be reached from the machine 
+running the build ( SSH ports needed )
+- `PKR_VAR_vsphere_resource_pool`: a vSphere resource pool to be used
+- `PKR_VAR_vsphere_folder`: the vSphere folder to place the virtual machine
 
 ### RHEL
 For Red Hat Enterprise Linux builds you need to set
@@ -39,6 +42,7 @@ There are distribution based make targets for building images
 - `make rocky` - Ubuntu 8 and 9
 - `make centos` - Centos 7.9
 - `make rhel` - RHEL 7.9, 8.4, and 8.6
+- `make flatcar` - Flatcar LTS
 
 Templates and VMs are created by default in the folder `build-d2iq-base-templates` This can be changed by injecting the environment variable `VSPHERE_FOLDER`
 
