@@ -27,7 +27,7 @@ ARCH=x86_64
 # OS=apple-darwin # MacOS
 # OS=pc-windows-gnu.exe # Windows
 OS=unknown-linux-gnu # Linux
-if [[ `uname -s` == "Darwin" ]]; then
+if [[ $(uname -s) == "Darwin" ]]; then
 OS=apple-darwin
 fi
 
