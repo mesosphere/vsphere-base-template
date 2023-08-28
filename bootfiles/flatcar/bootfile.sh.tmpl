@@ -41,6 +41,6 @@ cat <<EOF >/tmp/ignition.json
 }
 EOF
 
-flatcar-install -d /dev/sda -o vmware_raw -C lts -i /tmp/ignition.json
+flatcar-install -d /dev/sda -o vmware_raw -i /tmp/ignition.json
 
 reboot

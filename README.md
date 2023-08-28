@@ -36,9 +36,13 @@ To be able to install RHEL you would need to provide an ISO to the vSphere clust
 `PKR_VAR_iso_path_entry="[your-data-store-name] path/to/rhel-server-7.9-x86_64-dvd.iso"` tells packer where to get the ISO from
 
 ### Flatcar
+
 Flatar builds requries ignition templates for boot
+
 - run `hack/flatcar/build_ignition.sh` to generate ignition configuration at `/tmp/ignition.json`
 - copy the contents of `/tmp/ignition.json` to `bootfiles/flatcar/bootfile.sh.tmpl`
+
+Flatcar expects ignition config in `guestinfo.ignition.config.data` and its format in `guestinfo.ignition.config.data.encoding`. Be aware that cloud-init in `guestinfo.coreos.config.data` won't work. To make build and test aware a packager variable `bootconfig_type` was introduced which could be `ignition` or by default `cloudinit`
 
 ## Build
 

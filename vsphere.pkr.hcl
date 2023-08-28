@@ -185,6 +185,10 @@ variable "iso_path_entry" {
   default = ""
 }
 
+variable "bootconfig_type" {
+  default = "cloudinit"
+}
+
 data "sshkey" "install" {
   name = "base-image-build"
 }
@@ -430,7 +434,10 @@ locals {
       "${path.root}/scripts/el/install_open_vm_tools.sh",
       "${path.root}/scripts/el/cleanup_dnf.sh"
     ],
-    "Flatcar" = []
+    "Flatcar" = [
+      "${path.root}/scripts/flatcar/no_autologin.sh",
+      "${path.root}/scripts/flatcar/clean.sh",
+    ]
   }
 
   common_pre_distro = []
@@ -466,6 +473,9 @@ build {
       template_name = join("/", [var.vsphere_folder, local.vm_name])
       ssh_username  = local.ssh_username
       datacenter    = var.vsphere_datacenter
+      distribution  = var.distribution
+      distribution_version = var.distribution_version
+      bootconfig_type = var.bootconfig_type
     }
   }
 }

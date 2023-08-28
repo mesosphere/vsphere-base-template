@@ -98,6 +98,12 @@ variable "manifest_output" {
   default = ""
 }
 
+variable "bootconfig_type" {
+  description = "cloudinit or ignition"
+  type    = string
+  default = "cloudinit"
+}
+
 data "sshkey" "install" {
   name = "base-image-test"
 }
@@ -111,6 +117,7 @@ locals {
   custom_data = contains(keys(local.build), "custom_data") ? local.build["custom_data"] : {}
   template = lookup(local.custom_data, "template_name", var.template)
   ssh_username = lookup(local.custom_data, "ssh_username", var.ssh_username)
+  bootconfig_type = lookup(local.custom_data, "bootconfig_type", var.bootconfig_type)
   base_cloudinit = <<EOF
 #cloud-config
 users:
@@ -136,6 +143,40 @@ network:
         name: eth*
       dhcp4: yes
 EOF
+  base_ignition = <<EOF
+{
+  "ignition": {
+    "config": {},
+    "security": {
+      "tls": {}
+    },
+    "timeouts": {},
+    "version": "2.3.0"
+  },
+  "networkd": {},
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "${var.ssh_public_key == "" ? data.sshkey.install.public_key : var.ssh_public_key}"
+        ]
+      }
+    ]
+  }
+}
+EOF
+  cloud_init_configuration_parameters = {
+    "guestinfo.userdata" = base64encode(local.base_cloudinit),
+    "guestinfo.userdata.encoding" = "base64",
+    "guestinfo.metadata" = base64encode(local.cloudinit_metadata)
+    "guestinfo.metadata.encoding" = "base64"
+  }
+  ignition_configuration_parameters = {
+    "guestinfo.ignition.config.data" = base64encode(local.base_ignition),
+    "guestinfo.ignition.config.data.encoding" = "base64",
+  }
+  configuration_parameters = local.bootconfig_type == "cloudinit" ? local.cloud_init_configuration_parameters : local.ignition_configuration_parameters
 }
 
 
@@ -171,12 +212,7 @@ source "vsphere-clone" "clone_test" {
   //   "/meta-data"       = "",
   // }
 
-  configuration_parameters = {
-    "guestinfo.userdata" = base64encode(local.base_cloudinit),
-    "guestinfo.userdata.encoding" = "base64",
-    "guestinfo.metadata" = base64encode(local.cloudinit_metadata)
-    "guestinfo.metadata.encoding" = "base64"
-  }
+  configuration_parameters = local.configuration_parameters
 
   create_snapshot     = false
   convert_to_template = false
