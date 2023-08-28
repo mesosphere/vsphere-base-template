@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# shellcheck disable=SC2154 # Ignore undefined vars passed from Packer
+cat <<EOF >/tmp/ignition.json
+{
+  "ignition": {
+    "config": {},
+    "security": {
+      "tls": {}
+    },
+    "timeouts": {},
+    "version": "2.3.0"
+  },
+  "networkd": {},
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "${public_key}"
+        ]
+      }
+    ]
+  },
+  "storage": {},
+  "systemd": {
+    "units": [
+      {
+        "enable": true,
+        "name": "docker.service"
+      },
+      {
+        "mask": true,
+        "name": "update-engine.service"
+      },
+      {
+        "mask": true,
+        "name": "locksmithd.service"
+      }
+    ]
+  }
+}
+EOF
+
+flatcar-install -d /dev/sda -o vmware_raw -i /tmp/ignition.json
+
+reboot
