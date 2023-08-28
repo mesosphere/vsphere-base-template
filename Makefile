@@ -72,7 +72,7 @@ rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
 rhel-release: rhel-release-79 rhel-release-84 rhel-release-86
 
 flatcar: manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
-flatcar-test-3033: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json.clean
+flatcar-test-3033: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
 flatcar-test-3033-clean: flatcar-test-3033 manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json.clean
 flatcar-test: flatcar-test-3033-clean
 flatcar-release-3033: flatcar-test-3033 release/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX)
