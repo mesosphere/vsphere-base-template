@@ -14,14 +14,14 @@ manifests/d2iq-base-%$(NAME_POSTFIX).json: packer.initialized vsphere.pkr.hcl $(
 
 .PHONY: manifests/d2iq-base-%$(NAME_POSTFIX).json.clean
 manifests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/d2iq-base-%$(NAME_POSTFIX).json
-	bash -x mkinclude/helper_deletetemplate.sh $(shell jq -r '.builds[0].custom_data.template' $<)
+	bash -x mkinclude/helper_deletetemplate.sh $(shell jq -r '.builds[0].custom_data.template' $<) "" $(shell jq -r '.builds[0].custom_data.resource_pool' $<)
 	mv $< $@
 
 manifests/tests/d2iq-base-%$(NAME_POSTFIX).json: manifests/d2iq-base-%$(NAME_POSTFIX).json clone-test.pkr.hcl
 	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ -on-error="$(PACKER_ON_ERROR)" clone-test.pkr.hcl
 
 manifests/ovf/d2iq-base-%$(NAME_POSTFIX).ovf: manifests/d2iq-base-%$(NAME_POSTFIX).json
-	bash mkinclude/helper_markasvm.sh $(VSPHERE_FOLDER)/d2iq-base-$*
+	bash mkinclude/helper_markasvm.sh $(VSPHERE_FOLDER)/d2iq-base-$* "" $(shell jq -r '.builds[0].custom_data.resource_pool' $<)
 	$(GOVC) export.ovf -dc=$(shell jq -r '.builds[0].custom_data.datacenter' $<) -vm=$(VSPHERE_FOLDER)/$(shell jq -r '.builds[0].custom_data.template_name' $<) $@
 	tar -czf $@.tar.gz $@/*
 
@@ -35,7 +35,7 @@ manifests/tests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/tests/d2iq-base
 
 .PHONY: release/d2iq-base-%$(NAME_POSTFIX)
 release/d2iq-base-%$(NAME_POSTFIX): manifests/d2iq-base-%$(NAME_POSTFIX).json
-	bash mkinclude/helper_deletetemplate.sh $(RELEASE_FOLDER)/d2iq-base-$* || true
+	bash mkinclude/helper_deletetemplate.sh $(RELEASE_FOLDER)/d2iq-base-$* "" $(shell jq -r '.builds[0].custom_data.resource_pool' $<)
 	$(GOVC) object.rename /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(shell jq -r '.builds[0].custom_data.template_name' $<) d2iq-base-$*
 	$(GOVC) object.mv /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/d2iq-base-$* /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(RELEASE_FOLDER)
 

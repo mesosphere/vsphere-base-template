@@ -3,6 +3,7 @@ DATACENTER=${DATACENTER:-$PKR_VAR_vsphere_datacenter}
 
 VM_NAME="${1}"
 VM_FOLDER="${2}"
+VM_POOL="${3}"
 
 
 VMBASEPATH="/${DATACENTER}/vm/${VM_FOLDER}"
@@ -20,4 +21,10 @@ if [ "${esxhost}" == "" ]; then
     exit 0
 fi
 
-govc vm.markasvm -host="$esxhost" -dc="${DATACENTER}" "${VMPATH%%/}"
+# if VM_POOL is set inject the pool into the command
+if [ "${VM_POOL}" != "" ]; then
+    ADDOPT="-pool=${VM_POOL}"
+fi
+
+# shellcheck disable=SC2086
+govc vm.markasvm -host="$esxhost" -dc="${DATACENTER}" $ADDOPT "${VMPATH%%/}"

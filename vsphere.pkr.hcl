@@ -475,6 +475,7 @@ build {
       datacenter    = var.vsphere_datacenter
       distribution  = var.distribution
       distribution_version = var.distribution_version
+      resource_pool = var.vsphere_resource_pool
       bootconfig_type = var.bootconfig_type
     }
   }
