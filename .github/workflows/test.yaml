@@ -34,7 +34,7 @@ jobs:
           GOVC_URL: ${{ secrets.VSPHERE_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_SERVER }}
           PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
           PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
-          PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_DATASTORE }}
+          PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_TEST_DATASTORE }}
           PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NETWORK }}
           PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
           RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
