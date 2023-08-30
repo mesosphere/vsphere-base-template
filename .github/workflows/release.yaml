@@ -39,6 +39,7 @@ jobs:
         RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
         RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
   create_release:
+    permissions: write-all
     name: Create Github release
     runs-on: ubuntu-latest
     outputs:
