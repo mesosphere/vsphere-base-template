@@ -98,6 +98,8 @@ flatcar-test-3033-clean: flatcar-test-3033 manifests/d2iq-base-Flatcar-3033.3.16
 flatcar-test: flatcar-test-3033-clean
 flatcar-release-3033: flatcar-test-3033 release/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX)
 flatcar-release: flatcar-release-3033
+flatcar-ovf-3033: manifests/ovf/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).ovf
+flatcar-ovf: flatcar-ovf-3033
 
 test-all: ubuntu-test rocky-test centos-test rhel-test
 release: ubuntu-release rocky-release centos-release rhel-release
