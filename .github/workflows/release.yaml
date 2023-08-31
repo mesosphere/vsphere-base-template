@@ -114,6 +114,8 @@ jobs:
           echo "listovf=$DATA" >> "$GITHUB_OUTPUT"
   releaseassets:
     name: Upload release assets
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     needs: [create_release, artifactinventory]
     strategy:
