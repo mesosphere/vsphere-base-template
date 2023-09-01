@@ -51,8 +51,8 @@ There are distribution based make targets for building images
 - `make ubuntu` - Ubuntu 20.04 and 22.04
 - `make rocky` - Ubuntu 8 and 9
 - `make centos` - Centos 7.9
-- `make rhel` - RHEL 7.9, 8.4, and 8.6
 - `make flatcar` - Flatcar LTS
+- `make rhel` - RHEL 7.9, 8.4, 8.6 and 8.8
 
 Templates and VMs are created by default in the folder `build-d2iq-base-templates` This can be changed by injecting the environment variable `VSPHERE_FOLDER`
 
