@@ -15,10 +15,10 @@ jobs:
       matrix:
         os: ["ubuntu", "rocky", "centos", "rhel", "flatcar"]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          ref: ${{ github.ref }}
+          ref: "${{ github.event.pull_request.merge_commit_sha }}"
       - name: Setup requirements
         if: contains(github.event.pull_request.labels.*.name, 'integration_test')
         run: |
