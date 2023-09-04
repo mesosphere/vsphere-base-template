@@ -23,6 +23,9 @@ autoinstall:
     allow-pw: false
     authorized-keys:
       - "${public_key}"
+  storage:
+    layout:
+        name: direct
   packages:
     - openssh-server
     - open-vm-tools
