@@ -25,7 +25,8 @@ autoinstall:
       - "${public_key}"
   storage:
     layout:
-        name: direct
+        name: lvm
+        sizing-policy: all
   packages:
     - openssh-server
     - open-vm-tools
