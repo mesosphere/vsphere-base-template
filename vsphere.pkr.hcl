@@ -443,7 +443,8 @@ locals {
   common_pre_distro = []
   common_post_distro = [
     "${path.root}/scripts/common/clean_authorized_keys.sh",
-    "${path.root}/scripts/common/finish_cloud_init.sh"
+    "${path.root}/scripts/common/finish_cloud_init.sh",
+    "${path.root}/scripts/common/zero_disk.sh"
     ]
   build_scripts_distro = lookup(local.distro_build_scripts, "${var.distribution}-${var.distribution_version}", lookup(local.distro_build_scripts, "${var.distribution}", []))
   build_scripts = concat(local.common_pre_distro, local.build_scripts_distro, local.common_post_distro)
