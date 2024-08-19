@@ -47,6 +47,9 @@ reboot
 
 # The %post section is essentially a shell script
 %post --erroronfail
+sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
 # Update the root certificates
 update-ca-trust force-enable
 # Passwordless sudo for the user '${ssh_username}'

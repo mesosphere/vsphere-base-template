@@ -11,5 +11,8 @@ if [ "$major_version" -ge 8 ]; then
     dnf -y install open-vm-tools cloud-init cloud-utils-growpart
 else
     # with el7 we install cloud-init from source
-    yum install -y open-vm-tools cloud-init cloud-utils-growpart dracut-modules-growroot https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    yum install -y open-vm-tools cloud-init cloud-utils-growpart dracut-modules-growroot https://dl.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm
+    yum install -y python2-pip python-netifaces python2-oauthlib python2-jsonschema
+    pip install https://files.pythonhosted.org/packages/d3/bb/d10e531b297dd1d46f6b1fd11d018247af9f2d460037554bb7bb9011c6ac/configobj-5.0.8-py2.py3-none-any.whl
+    yum install -y python36-pip
 fi
