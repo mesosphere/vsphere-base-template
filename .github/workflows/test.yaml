@@ -8,8 +8,7 @@ on:
 jobs:
   base_image_tests:
     runs-on: 
-    - self-hosted
-    - small
+    - self-hosted-nutanix-medium
     strategy:
       fail-fast: false
       matrix:
@@ -18,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: "${{ github.event.pull_request.merge_commit_sha }}"
+          ref: "${{ github.event.pull_request.head.sha }}"
       - name: Setup requirements
         if: contains(github.event.pull_request.labels.*.name, 'integration_test')
         run: |
