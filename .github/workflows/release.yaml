@@ -5,12 +5,12 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 jobs:
   release:
     name: Create D2iQ Templates
     runs-on: 
-    - self-hosted
-    - small
+    - self-hosted-nutanix-medium
     strategy:
       fail-fast: false
       matrix:

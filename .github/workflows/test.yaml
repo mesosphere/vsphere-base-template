@@ -8,8 +8,7 @@ on:
 jobs:
   base_image_tests:
     runs-on: 
-    - self-hosted
-    - small
+    - self-hosted-nutanix-medium
     strategy:
       fail-fast: false
       matrix:
