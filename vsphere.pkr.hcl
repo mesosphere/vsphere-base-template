@@ -210,6 +210,7 @@ locals {
     "RockyLinux-8.7"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
     "RockyLinux-9.1"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
     "CentOS"          = "${path.root}/bootfiles/centos/centos7.ks"
+    "OracleLinux"     = "${path.root}/bootfiles/oraclelinux/oraclelinux9.ks"
     "Ubuntu"          = "${path.root}/bootfiles/ubuntu/autoinstall.yaml"
     "Ubuntu-18.04"    = "${path.root}/bootfiles/ubuntu/preseed.cfg"
     "Flatcar"         = "${path.root}/bootfiles/flatcar/bootfile.sh.tmpl"
@@ -275,6 +276,7 @@ locals {
     "RHEL"         = local.el_bootcommand
     "CentOS"       = local.el_old_bootcommand
     "RockyLinux"   = local.el_bootcommand
+    "OracleLinux"  = local.el_bootcommand
     "Ubuntu-18.04" = local.ubuntu_bionic_bootcommand
     "Ubuntu-20.04" = local.ubuntu_bootcommand
     "Ubuntu-22.04" = local.ubuntu_jammy_bootcommand
@@ -302,20 +304,22 @@ locals {
   default_vsphere_guest_os_type = "otherlinux64guest"
 
   distro_vsphere_guest_os_type_lookup = {
-    "Ubuntu"     = "ubuntu64Guest",
-    "CentOS"     = "centos64Guest",
-    "RHEL"       = "rhel7_64Guest"
-    "RockyLinux" = "centos64Guest"
-    "Flatcar"    = "otherlinux64Guest"
+    "Ubuntu"      = "ubuntu64Guest",
+    "CentOS"      = "centos64Guest",
+    "RHEL"        = "rhel7_64Guest"
+    "RockyLinux"  = "centos64Guest"
+    "OracleLinux" = "oracleLinux64Guest"
+    "Flatcar"     = "otherlinux64Guest"
   }
 
   # lookup by <distro_name>-<distro_version> fallback to <distro_name>
   distro_default_ssh_username = {
-    "Ubuntu"     = "ubuntu",
-    "CentOS"     = "centos",
-    "RHEL"       = "eluser"
-    "RockyLinux" = "rockstar"
-    "Flatcar"    = "core"
+    "Ubuntu"      = "ubuntu",
+    "CentOS"      = "centos",
+    "RHEL"        = "eluser"
+    "RockyLinux"  = "rockstar"
+    "OracleLinux" = "opc"
+    "Flatcar"     = "core"
   }
 
   boot_command_distro = lookup(local.distro_boot_command_lookup, "${var.distribution}", [""])
@@ -431,6 +435,10 @@ locals {
       "${path.root}/scripts/el/rhn_remove_subscription.sh"
     ],
     "RockyLinux" = [
+      "${path.root}/scripts/el/install_open_vm_tools.sh",
+      "${path.root}/scripts/el/cleanup_dnf.sh"
+    ],
+    "OracleLinux" = [
       "${path.root}/scripts/el/install_open_vm_tools.sh",
       "${path.root}/scripts/el/cleanup_dnf.sh"
     ],

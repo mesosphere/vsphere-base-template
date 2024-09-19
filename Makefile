@@ -52,7 +52,6 @@ ubuntu-ovf-20: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
 ubuntu-ovf-22: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
 ubuntu-ovf: ubuntu-ovf-20 ubuntu-ovf-22
 
-
 rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
 rocky-test-87: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
 rocky-test-87-clean: rocky-test-87 manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
@@ -96,6 +95,15 @@ rhel-ovf-86: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
 rhel-ovf-88: manifests/ovf/d2iq-base-RHEL-88$(NAME_POSTFIX).ovf
 rhel-ovf: rhel-ovf-79 rhel-ovf-84 rhel-ovf-86 rhel-ovf-88
 
+oraclelinux: manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json
+oraclelinux-test-94: manifests/tests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
+oraclelinux-test-94-clean: oraclelinux-test-94 manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
+oraclelinux-test: oraclelinux-test-94-clean
+oraclelinux-release-94: oraclelinux-test-94 release/d2iq-base-OracleLinux-94$(NAME_POSTFIX)
+oraclelinux-release: oraclelinux-release-94
+oraclelinux-ovf-94: manifests/ovf/d2iq-base-OracleLinux-94$(NAME_POSTFIX).ovf
+oraclelinux-ovf: oraclelinux-ovf-94
+
 flatcar: manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
 flatcar-test-3033: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
 flatcar-test-3033-clean: flatcar-test-3033 manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json.clean
@@ -106,5 +114,5 @@ flatcar-ovf-3033: manifests/ovf/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).ovf
 flatcar-ovf: flatcar-ovf-3033
 
 
-test-all: ubuntu-test rocky-test centos-test rhel-test
-release: ubuntu-release rocky-release centos-release rhel-release
+test-all: ubuntu-test rocky-test centos-test rhel-test oraclelinux-test
+release: ubuntu-release rocky-release centos-release rhel-release oraclelinux-release
