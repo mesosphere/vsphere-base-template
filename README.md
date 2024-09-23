@@ -51,6 +51,7 @@ There are distribution based make targets for building images
 - `make ubuntu` - Ubuntu 20.04 and 22.04
 - `make rocky` - Ubuntu 8 and 9
 - `make centos` - Centos 7.9
+- `make oraclelinux` - OracleLinux 9.10
 - `make flatcar` - Flatcar LTS
 - `make rhel` - RHEL 7.9, 8.4, 8.6 and 8.8
 

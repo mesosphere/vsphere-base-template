@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu", "rocky", "centos", "rhel", "flatcar"]
+        os: ["ubuntu", "rocky", "centos", "rhel", "oraclelinux", "flatcar"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
