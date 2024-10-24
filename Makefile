@@ -87,7 +87,7 @@ rhel-test-810: manifests/tests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
 rhel-test-810-clean: rhel-test-810 manifests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
 rhel-test-94: manifests/tests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
 rhel-test-94-clean: rhel-test-94 manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
-rhel-test: rhel-test-79-clean rhel-test-84-clean rhel-test-86-clean rhel-test-88-clean
+rhel-test: rhel-test-79-clean rhel-test-84-clean rhel-test-86-clean rhel-test-88-clean rhel-test-810-clean rhel-test-94-clean
 rhel-release-79: rhel-test-79 release/d2iq-base-RHEL-79$(NAME_POSTFIX)
 rhel-release-84: rhel-test-84 release/d2iq-base-RHEL-84$(NAME_POSTFIX)
 rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
