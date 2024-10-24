@@ -83,17 +83,25 @@ rhel-test-86: manifests/tests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
 rhel-test-86-clean: rhel-test-86 manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
 rhel-test-88: manifests/tests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
 rhel-test-88-clean: rhel-test-88 manifests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
+rhel-test-810: manifests/tests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
+rhel-test-810-clean: rhel-test-810 manifests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
+rhel-test-94: manifests/tests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
+rhel-test-94-clean: rhel-test-94 manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
 rhel-test: rhel-test-79-clean rhel-test-84-clean rhel-test-86-clean rhel-test-88-clean
 rhel-release-79: rhel-test-79 release/d2iq-base-RHEL-79$(NAME_POSTFIX)
 rhel-release-84: rhel-test-84 release/d2iq-base-RHEL-84$(NAME_POSTFIX)
 rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
 rhel-release-88: rhel-test-88 release/d2iq-base-RHEL-88$(NAME_POSTFIX)
-rhel-release: rhel-release-79 rhel-release-84 rhel-release-86 rhel-release-88
+rhel-release-810: rhel-test-810 release/d2iq-base-RHEL-810$(NAME_POSTFIX)
+rhel-release-94: rhel-test-94 release/d2iq-base-RHEL-94$(NAME_POSTFIX)
+rhel-release: rhel-release-79 rhel-release-84 rhel-release-86 rhel-release-88 rhel-release-810 rhel-release-94
 rhel-ovf-79: manifests/ovf/d2iq-base-RHEL-79$(NAME_POSTFIX).ovf
 rhel-ovf-84: manifests/ovf/d2iq-base-RHEL-84$(NAME_POSTFIX).ovf
 rhel-ovf-86: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
 rhel-ovf-88: manifests/ovf/d2iq-base-RHEL-88$(NAME_POSTFIX).ovf
-rhel-ovf: rhel-ovf-79 rhel-ovf-84 rhel-ovf-86 rhel-ovf-88
+rhel-ovf-810: manifests/ovf/d2iq-base-RHEL-810$(NAME_POSTFIX).ovf
+rhel-ovf-94: manifests/ovf/d2iq-base-RHEL-94$(NAME_POSTFIX).ovf
+rhel-ovf: rhel-ovf-79 rhel-ovf-84 rhel-ovf-86 rhel-ovf-88 rhel-ovf-810 rhel-ovf-94
 
 oraclelinux: manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json
 oraclelinux-test-94: manifests/tests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
