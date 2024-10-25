@@ -7,6 +7,7 @@ VSPHERE_FOLDER ?= build-d2iq-base-templates
 RELEASE_FOLDER ?= d2iq-base-templates
 NAME_POSTFIX ?= -manual-build-$(shell whoami)
 
+PACKER_CACHE_DIR ?= ./packer_cache
 PACKER_ON_ERROR ?= cleanup
 
 manifests/d2iq-base-%$(NAME_POSTFIX).json: packer.initialized vsphere.pkr.hcl $(GOVC)
