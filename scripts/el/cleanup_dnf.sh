@@ -35,12 +35,15 @@ rm -rf /dev/.udev/;
 
 # will fail on rocky
 if [ "$distro" != 'rocky' ]; then
-  for ndev in /etc/sysconfig/network-scripts/ifcfg-*; do
-      if [ "$(basename "$ndev")" != "ifcfg-lo" ]; then
-          sed -i '/^HWADDR/d' "$ndev";
-          sed -i '/^UUID/d' "$ndev";
-      fi
-  done
+  # catch el9+ networkmanager
+  if test -f /etc/sysconfig/network-scripts/ifcfg-*; then
+    for ndev in /etc/sysconfig/network-scripts/ifcfg-*; do
+        if [ "$(basename "$ndev")" != "ifcfg-lo" ]; then
+            sed -i '/^HWADDR/d' "$ndev";
+            sed -i '/^UUID/d' "$ndev";
+        fi
+    done
+  fi
 fi
 
 echo "truncate any logs that have built up during the install"
