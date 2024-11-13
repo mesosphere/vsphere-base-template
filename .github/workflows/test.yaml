@@ -55,13 +55,13 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'integration_test') || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
         id: build-os-matrix
         run: |
-          echo "::set-output name=matrix::$(jq -n --arg os_list "ubuntu-20,ubuntu-22,rocky-8.7,rocky-9.1,centos-7.9,rhel-7.9,rhel-8.4,rhel-8.6,rhel-8.8,rhel-8.10,rhel-9.4,oraclelinux-9.4,flatcar-3033.3.16" '{os: $os_list | split(",")}')"
+          echo "::set-output name=matrix::$(jq -n --arg os_list "ubuntu-20,ubuntu-22,rocky-8.7,rocky-9.1,centos-7.9,rhel-7.9,rhel-8.4,rhel-8.6,rhel-8.8,rhel-8.10,rhel-9.4,oraclelinux-9.4,flatcar-3033.3.16" '$os_list | split(",")')"
       # build output json from os inputs list
       - name: Build OS matrix for single OS
         if: contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os != 'all'
         id: build-os-matrix-single
         run: |
-          echo "::set-output name=matrix::$(jq -n --arg os_list "${{ github.event.inputs.os }}" '{os: $os_list | split(",")}')"
+          echo "::set-output name=matrix::$(jq -n --arg os_list "${{ github.event.inputs.os }}" '$os_list | split(",")')"
 
   base_image_tests:
     runs-on:
