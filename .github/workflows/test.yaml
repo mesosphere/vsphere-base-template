@@ -13,11 +13,31 @@ on:
         type: choice
         required: true
         options:
-          - ubuntu
-          - rocky
-          - centos
-          - rhel
-          - flatcar
+          - ubuntu-20
+          - ubuntu-22
+          - rocky-8.7
+          - rocky-9.1
+          - centos-7.9
+          - rhel-7.9
+          - rhel-8.4
+          - rhel-8.6
+          - rhel-8.8
+          - rhel-8.10
+          - rhel-9.4
+          - oraclelinux-9.4
+          - flatcar-3033.3.16
+env:
+  VSPHERE_USERNAME: ${{ secrets.VSPHERE_NKP_SRE_USERNAME }}
+  VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
+  VSPHERE_SERVER: ${{ secrets.VSPHERE_NKP_SERVER }}
+  GOVC_URL: ${{ secrets.VSPHERE_NKP_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_NKP_SERVER }}
+  PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
+  PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
+  PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_NKP_DATASTORE }}
+  PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NKP_NETWORK }}
+  PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
+  RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
+  RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
 
 jobs:
   base_image_tests:
@@ -26,7 +46,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu", "rocky", "centos", "rhel", "oraclelinux", "flatcar"]
+        os:
+          - ubuntu-20
+          - ubuntu-22
+          - rocky-8.7
+          - rocky-9.1
+          - centos-7.9
+          - rhel-7.9
+          - rhel-8.4
+          - rhel-8.6
+          - rhel-8.8
+          - rhel-8.10
+          - rhel-9.4
+          - oraclelinux-9.4
+          - flatcar-3033.3.16
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -40,18 +73,6 @@ jobs:
       - name: Run integration tests for ${{ matrix.os }}
         run: make ${{ matrix.os }}-test
         if: contains(github.event.pull_request.labels.*.name, 'integration_test')
-        env:
-          VSPHERE_USERNAME: ${{ secrets.VSPHERE_SRE_USERNAME }}
-          VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
-          VSPHERE_SERVER: ${{ secrets.VSPHERE_SERVER }}
-          GOVC_URL: ${{ secrets.VSPHERE_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_SERVER }}
-          PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
-          PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
-          PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_TEST_DATASTORE }}
-          PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NETWORK }}
-          PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
-          RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
-          RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
 
   # Invoke the test manually.
   base_image_test:
@@ -67,17 +88,5 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get -y install xorriso
           curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
-      - name: Run integration tests for ${{ matrix.os }}
-        run: make ${{ matrix.os }}-test
-        env:
-          VSPHERE_USERNAME: ${{ secrets.VSPHERE_SRE_USERNAME }}
-          VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
-          VSPHERE_SERVER: ${{ secrets.VSPHERE_SERVER }}
-          GOVC_URL: ${{ secrets.VSPHERE_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_SERVER }}
-          PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
-          PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
-          PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_TEST_DATASTORE }}
-          PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NETWORK }}
-          PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
-          RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
-          RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
+      - name: Run integration tests for ${{ github.event.inputs.os }}
+        run: make ${{ github.event.inputs.os }}-test
