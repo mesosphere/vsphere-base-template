@@ -67,7 +67,7 @@ jobs:
       - name: Set matrix output
         id: set-matrix
         run: |
-          echo "matrix=${{ env.buildmatrix }}" >> $GITHUB_ENV
+          echo "matrix=${{ env.buildmatrix }}" >> $GITHUB_OUTPUT
 
   base_image_tests:
     runs-on:
