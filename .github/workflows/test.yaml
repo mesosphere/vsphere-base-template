@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
     outputs:
-      matrix: ${{ steps.build-os-matrix.outputs.matrix || steps.build-os-matrix-single.outputs.matrix || '[]' }}
+      matrix: ${{ steps.build-os-matrix.outputs.matrix || steps.build-os-matrix-single.outputs.matrix || steps.empty-os-matrix.outputs.matrix }}
     steps:
       # build output json from os inputs list
       - name: Build OS matrix for all OS
@@ -62,6 +62,10 @@ jobs:
         id: build-os-matrix-single
         run: |
           echo "::set-output name=matrix::$(jq -n --arg os_list "${{ github.event.inputs.os }}" '$os_list | split(",")')"
+      - name: Empty OS matrix
+        id: empty-os-matrix
+        run: |
+          echo "::set-output name=matrix::[]"
 
   base_image_tests:
     runs-on:
