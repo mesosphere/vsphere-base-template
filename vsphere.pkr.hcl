@@ -286,7 +286,7 @@ locals {
   default_firmware = "bios"
   # lookup by <distro_name>-<distro_version> fallback to <distro_version> fallback to local.default_firmware
   distro_firmware_lookup = {
-    "Ubuntu" = "efi-secure"
+    "Ubuntu" = "efi"
   }
 
   default_bootwait = "10s"
