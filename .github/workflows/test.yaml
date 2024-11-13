@@ -62,7 +62,7 @@ jobs:
           echo "buildmatrix=$(jq -cn --arg os_list '${{ github.event.inputs.os }}' '{os: $os_list | split(",")}')" >> $GITHUB_ENV
       - name: Empty OS matrix
         id: empty-os-matrix
-        if: ! contains(fromJson('["workflow_dispatch"]'), github.event_name)
+        if: ${{ !contains(fromJson('["workflow_dispatch"]'), github.event_name) }}
         run: |
           echo "buildmatrix=$(jq -cn --arg os_list '' '{os: $os_list | split(",")}')" >> $GITHUB_ENV
       - name: Set matrix output
