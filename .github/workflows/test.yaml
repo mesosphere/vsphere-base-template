@@ -13,6 +13,7 @@ on:
         type: choice
         required: true
         options:
+          - all
           - ubuntu-20
           - ubuntu-22
           - rocky-8.7
@@ -40,53 +41,44 @@ env:
   RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
 
 jobs:
-  base_image_tests:
+  # Build matrix to test when label integration_test is added to PR or manually invoked.
+  build_list:
     runs-on:
       - self-hosted-nutanix-medium
     strategy:
       fail-fast: false
+    outputs:
+      matrix: ${{ steps.build-os-matrix.outputs.matrix || steps.build-os-matrix-single.outputs.matrix || '[]' }}
+    steps:
+      # build output json from os inputs list
+      - name: Build OS matrix for all OS
+        if: contains(github.event.pull_request.labels.*.name, 'integration_test') || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
+        id: build-os-matrix
+        run: |
+          echo "::set-output name=matrix::$(jq -n --arg os_list "ubuntu-20,ubuntu-22,rocky-8.7,rocky-9.1,centos-7.9,rhel-7.9,rhel-8.4,rhel-8.6,rhel-8.8,rhel-8.10,rhel-9.4,oraclelinux-9.4,flatcar-3033.3.16" '{os: $os_list | split(",")}')"
+      # build output json from os inputs list
+      - name: Build OS matrix for single OS
+        if: contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os != 'all'
+        id: build-os-matrix-single
+        run: |
+          echo "::set-output name=matrix::$(jq -n --arg os_list "${{ github.event.inputs.os }}" '{os: $os_list | split(",")}')"
+
+  base_image_tests:
+    runs-on:
+      - self-hosted-nutanix-medium
+    needs: build_list
+    strategy:
+      fail-fast: false
       matrix:
-        os:
-          - ubuntu-20
-          - ubuntu-22
-          - rocky-8.7
-          - rocky-9.1
-          - centos-7.9
-          - rhel-7.9
-          - rhel-8.4
-          - rhel-8.6
-          - rhel-8.8
-          - rhel-8.10
-          - rhel-9.4
-          - oraclelinux-9.4
-          - flatcar-3033.3.16
+        os: ${{fromJson(needs.build_list.outputs.matrix.os)}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           ref: "${{ github.event.pull_request.head.sha }}"
       - name: Setup requirements
-        if: contains(github.event.pull_request.labels.*.name, 'integration_test')
         run: |
           sudo apt-get update && sudo apt-get -y install xorriso
           curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
       - name: Run integration tests for ${{ matrix.os }}
         run: make ${{ matrix.os }}-test
-        if: contains(github.event.pull_request.labels.*.name, 'integration_test')
-
-  # Invoke the test manually.
-  base_image_test:
-    if: contains(fromJson('["workflow_dispatch"]'), github.event_name)
-    runs-on:
-      - self-hosted-nutanix-medium
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: "${{ github.event.pull_request.head.sha }}"
-      - name: Setup requirements
-        run: |
-          sudo apt-get update && sudo apt-get -y install xorriso
-          curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
-      - name: Run integration tests for ${{ github.event.inputs.os }}
-        run: make ${{ github.event.inputs.os }}-test
