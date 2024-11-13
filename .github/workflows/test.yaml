@@ -54,12 +54,12 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'integration_test') || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
         id: build-os-matrix
         run: |
-          echo "matrix=$(jq -n --arg os_list 'ubuntu-20,ubuntu-22,rocky-8.7,rocky-9.1,centos-7.9,rhel-7.9,rhel-8.4,rhel-8.6,rhel-8.8,rhel-8.10,rhel-9.4,oraclelinux-9.4,flatcar-3033.3.16' '$os_list | split(",")')" >> $GITHUB_ENV
+          echo "matrix=$(jq -cn --arg os_list 'ubuntu-20,ubuntu-22,rocky-8.7,rocky-9.1,centos-7.9,rhel-7.9,rhel-8.4,rhel-8.6,rhel-8.8,rhel-8.10,rhel-9.4,oraclelinux-9.4,flatcar-3033.3.16' '$os_list | split(",")')" >> $GITHUB_ENV
       - name: Build OS matrix for single OS
         if: contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os != 'all'
         id: build-os-matrix-single
         run: |
-          echo "matrix=$(jq -n --arg os_list '${{ github.event.inputs.os }}' '$os_list | split(",")')" >> $GITHUB_ENV
+          echo "matrix=$(jq -cn --arg os_list '${{ github.event.inputs.os }}' '$os_list | split(",")')" >> $GITHUB_ENV
       - name: Empty OS matrix
         id: empty-os-matrix
         run: |
