@@ -93,8 +93,8 @@ jobs:
       - name: Output check approvals
         run: |
           echo "ouputs: ${{ toJSON(needs.check_approvals.outputs.result) }}"
-          echo "hasRequiredApprovals: ${{ needs.check_approvals.outputs.hasRequiredApprovals }}"
-          echo "hasIntegrationTestLabel: ${{ needs.check_approvals.outputs.hasIntegrationTestLabel }}"
+          echo "hasRequiredApprovals: ${{ needs.check_approvals.outputs.result.hasRequiredApprovals }}"
+          echo "hasIntegrationTestLabel: ${{ needs.check_approvals.outputs.result.hasIntegrationTestLabel }}"
   build_list:
     runs-on:
       - self-hosted-nutanix-medium
