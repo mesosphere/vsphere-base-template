@@ -49,7 +49,7 @@ env:
   RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
 
 jobs:
-  check-approvals:
+  check_approvals:
     runs-on: self-hosted-nutanix-medium
     steps:
       - name: Checkout code
@@ -76,15 +76,23 @@ jobs:
             core.setOutput('hasRequiredApprovals', approvedReviews.length >= requiredApprovals ? 'true' : 'false');
             core.setOutput('hasIntegrationTestLabel', hasIntegrationTestLabel ? 'true' : 'false');
   # Build matrix to test when label integration_test is added to PR or manually invoked.
+  output_check_approvals:
+    runs-on: self-hosted-nutanix-medium
+    needs: check_approvals
+    steps:
+      - name: Output check approvals
+        run: |
+          echo "hasRequiredApprovals: ${{ needs.check_approvals.outputs.hasRequiredApprovals }}"
+          echo "hasIntegrationTestLabel: ${{ needs.check_approvals.outputs.hasIntegrationTestLabel }}"
   build_list:
     runs-on:
       - self-hosted-nutanix-medium
-    needs: check-approvals
+    needs: check_approvals
     strategy:
       fail-fast: false
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-    if: needs.check-approvals.outputs.hasRequiredApprovals == 'true' && needs.check-approvals.outputs.hasIntegrationTestLabel == 'true' || contains(fromJson('["workflow_dispatch"]'), github.event_name)
+    if: needs.check_approvals.outputs.hasRequiredApprovals == 'true' && needs.check_approvals.outputs.hasIntegrationTestLabel == 'true' || contains(fromJson('["workflow_dispatch"]'), github.event_name)
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
