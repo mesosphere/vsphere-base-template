@@ -52,7 +52,7 @@ jobs:
   check_approvals:
     runs-on: self-hosted-nutanix-medium
     outputs:
-      result: ${{ steps.check_approvals.outputs }}
+      result: ${{ steps.check_approvals.outputs.result }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
