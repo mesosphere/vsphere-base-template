@@ -77,7 +77,7 @@ jobs:
               hasRequiredApprovals: approvedReviews.length >= requiredApprovals,
               hasIntegrationTestLabel: hasIntegrationTestLabel
             };
-            
+
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   output_check_approvals:
     runs-on: self-hosted-nutanix-medium
@@ -85,6 +85,7 @@ jobs:
     steps:
       - name: Output check approvals
         run: |
+          echo "ouputs: ${{ needs.check_approvals.outputs }}"
           echo "hasRequiredApprovals: ${{ needs.check_approvals.outputs.hasRequiredApprovals }}"
           echo "hasIntegrationTestLabel: ${{ needs.check_approvals.outputs.hasIntegrationTestLabel }}"
   build_list:
