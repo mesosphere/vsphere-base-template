@@ -51,6 +51,8 @@ env:
 jobs:
   check_approvals:
     runs-on: self-hosted-nutanix-medium
+    outputs:
+      result: ${{ steps.check_approvals.outputs }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -73,6 +75,9 @@ jobs:
             const labels = context.payload.pull_request.labels.map(label => label.name);
             const hasIntegrationTestLabel = labels.includes('integration_test');
 
+            console.log(`Approvals: ${approvedReviews.length}`);
+            console.log(`Required approvals: ${requiredApprovals}`);
+
             return {
               hasRequiredApprovals: approvedReviews.length >= requiredApprovals,
               hasIntegrationTestLabel: hasIntegrationTestLabel
@@ -85,7 +90,7 @@ jobs:
     steps:
       - name: Output check approvals
         run: |
-          echo "ouputs: ${{ toJSON(needs.check_approvals.outputs) }}"
+          echo "ouputs: ${{ toJSON(needs.check_approvals.outputs.result) }}"
           echo "hasRequiredApprovals: ${{ needs.check_approvals.outputs.hasRequiredApprovals }}"
           echo "hasIntegrationTestLabel: ${{ needs.check_approvals.outputs.hasIntegrationTestLabel }}"
   build_list:
