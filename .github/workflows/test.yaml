@@ -73,8 +73,11 @@ jobs:
             const labels = context.payload.pull_request.labels.map(label => label.name);
             const hasIntegrationTestLabel = labels.includes('integration_test');
 
-            core.setOutput('hasRequiredApprovals', approvedReviews.length >= requiredApprovals ? 'true' : 'false');
-            core.setOutput('hasIntegrationTestLabel', hasIntegrationTestLabel ? 'true' : 'false');
+            return {
+              hasRequiredApprovals: approvedReviews.length >= requiredApprovals,
+              hasIntegrationTestLabel: hasIntegrationTestLabel
+            };
+            
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   output_check_approvals:
     runs-on: self-hosted-nutanix-medium
