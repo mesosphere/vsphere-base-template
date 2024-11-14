@@ -52,7 +52,7 @@ jobs:
   check_approvals:
     runs-on: self-hosted-nutanix-medium
     outputs:
-      result: ${{ steps.check_approvals.outputs.result }}
+      result: ${{ toJSON(steps.check_approvals.outputs.result) }}
       hasRequiredApprovals: ${{ steps.check_approvals.outputs.result.hasRequiredApprovals }}
       hasIntegrationTestLabel: ${{ steps.check_approvals.outputs.result.hasIntegrationTestLabel }}
     steps:
@@ -92,9 +92,9 @@ jobs:
     steps:
       - name: Output check approvals
         run: |
-          echo "ouputs: ${{ toJSON(needs.check_approvals.outputs.result) }}"
-          echo "hasRequiredApprovals: ${{ needs.check_approvals.outputs.result.hasRequiredApprovals }}"
-          echo "hasIntegrationTestLabel: ${{ needs.check_approvals.outputs.hasIntegrationTestLabel }}"
+          echo "ouputs: ${{ needs.check_approvals.outputs.result }}"
+          echo "hasRequiredApprovals: ${{ fromJson(needs.check_approvals.outputs.result).hasRequiredApprovals }}"
+          echo "hasIntegrationTestLabel: ${{ fromJson(needs.check_approvals.outputs.result).hasIntegrationTestLabel }}"
   build_list:
     runs-on:
       - self-hosted-nutanix-medium
