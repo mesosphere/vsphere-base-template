@@ -85,7 +85,7 @@ jobs:
     steps:
       - name: Output check approvals
         run: |
-          echo "ouputs: ${{ needs.check_approvals.outputs }}"
+          echo "ouputs: ${{ toJSON(needs.check_approvals.outputs) }}"
           echo "hasRequiredApprovals: ${{ needs.check_approvals.outputs.hasRequiredApprovals }}"
           echo "hasIntegrationTestLabel: ${{ needs.check_approvals.outputs.hasIntegrationTestLabel }}"
   build_list:
