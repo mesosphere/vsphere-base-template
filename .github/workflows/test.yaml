@@ -53,6 +53,8 @@ jobs:
     runs-on: self-hosted-nutanix-medium
     outputs:
       result: ${{ steps.check_approvals.outputs.result }}
+      hasRequiredApprovals: ${{ steps.check_approvals.outputs.result.hasRequiredApprovals }}
+      hasIntegrationTestLabel: ${{ steps.check_approvals.outputs.result.hasIntegrationTestLabel }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
