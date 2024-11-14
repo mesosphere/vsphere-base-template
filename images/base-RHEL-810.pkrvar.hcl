@@ -4,4 +4,4 @@ distribution_version="8"
 iso_paths= [
      "[nkp-nfs-infra] isos/rhel-8.10-x86_64-dvd.iso"
 ]
-iso_checksum="6ced368628750ff3ea8a2fc52a371ba368d3377b8307caafda"
+iso_checksum="6ced368628750ff3ea8a2fc52a371ba368d3377b8307caafdasdasdasd"
