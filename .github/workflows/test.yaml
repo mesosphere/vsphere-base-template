@@ -52,9 +52,7 @@ jobs:
   check_approvals:
     runs-on: self-hosted-nutanix-medium
     outputs:
-      result: ${{ toJSON(steps.check_approvals.outputs.result) }}
-      hasRequiredApprovals: ${{ steps.check_approvals.outputs.result.hasRequiredApprovals }}
-      hasIntegrationTestLabel: ${{ steps.check_approvals.outputs.result.hasIntegrationTestLabel }}
+      result: ${{ steps.check_approvals.outputs.result }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -75,15 +73,21 @@ jobs:
             const requiredApprovals = 1;  // Set the number of required approvals here
 
             const labels = context.payload.pull_request.labels.map(label => label.name);
-            const hasIntegrationTestLabel = labels.includes('integration_test');
+            const hasIntegrationTestLabel = labels.includes('integration_test') || labels.includes('skip_integration');
 
             console.log(`Approvals: ${approvedReviews.length}`);
             console.log(`Required approvals: ${requiredApprovals}`);
 
-            return {
-              hasRequiredApprovals: approvedReviews.length >= requiredApprovals,
-              hasIntegrationTestLabel: hasIntegrationTestLabel
-            };
+            #fail the job if the required approvals are not met
+            if (approvedReviews.length < requiredApprovals) {
+              core.setFailed(`Required approvals not met. Current approvals: ${approvedReviews.length}`);
+            }
+            #fail the job if the integration_test label is not present
+            if (!hasIntegrationTestLabel) {
+              core.setFailed('The integration_test label is required to run the integration tests');
+            }
+
+            return approvedReviews.length >= requiredApprovals && hasIntegrationTestLabel;
 
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   output_check_approvals:
@@ -93,8 +97,6 @@ jobs:
       - name: Output check approvals
         run: |
           echo "ouputs: ${{ needs.check_approvals.outputs.result }}"
-          echo "hasRequiredApprovals: ${{ fromJson(needs.check_approvals.outputs.result).hasRequiredApprovals }}"
-          echo "hasIntegrationTestLabel: ${{ fromJson(needs.check_approvals.outputs.result).hasIntegrationTestLabel }}"
   build_list:
     runs-on:
       - self-hosted-nutanix-medium
@@ -103,7 +105,7 @@ jobs:
       fail-fast: false
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-    if: needs.check_approvals.outputs.hasRequiredApprovals == 'true' && needs.check_approvals.outputs.hasIntegrationTestLabel == 'true' || contains(fromJson('["workflow_dispatch"]'), github.event_name)
+    if: ${{ needs.check_approvals.outputs.result == 'true' || contains(fromJson('["workflow_dispatch"]'), github.event_name) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
