@@ -41,87 +41,91 @@ release/d2iq-base-%$(NAME_POSTFIX): manifests/d2iq-base-%$(NAME_POSTFIX).json
 	$(GOVC) object.mv /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(VSPHERE_FOLDER)/d2iq-base-$* /$(shell jq -r '.builds[0].custom_data.datacenter' $<)/vm/$(RELEASE_FOLDER)
 
 ubuntu: manifests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json manifests/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json
-ubuntu-test-20: manifests/tests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json.clean
-ubuntu-test-20-clean: ubuntu-test-20 manifests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json.clean 
-ubuntu-test-22: manifests/tests/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json.clean
-ubuntu-test-22-clean: ubuntu-test-22 manifests/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json.clean 
-ubuntu-test: ubuntu-test-20-clean ubuntu-test-22-clean
-ubuntu-release-20: ubuntu-test-20 release/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX)
-ubuntu-release-22: ubuntu-test-22 release/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX)
-ubuntu-release: ubuntu-release-20 ubuntu-release-22
-ubuntu-ovf-20: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
-ubuntu-ovf-22: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
-ubuntu-ovf: ubuntu-ovf-20 ubuntu-ovf-22
+ubuntu-20-test: manifests/tests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json.clean
+ubuntu-20-test-clean: ubuntu-20-test manifests/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).json.clean 
+ubuntu-22-test: manifests/tests/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json.clean
+ubuntu-22-test-clean: ubuntu-22-test manifests/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).json.clean 
+ubuntu-test: ubuntu-20-test-clean ubuntu-22-test-clean
+ubuntu-20-release: ubuntu-20-test release/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX)
+ubuntu-22-release: ubuntu-22-test release/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX)
+ubuntu-release: ubuntu-20-release ubuntu-22-release
+ubuntu-20-ovf: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
+ubuntu-22-ovf: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
+ubuntu-ovf: ubuntu-20-ovf ubuntu-22-ovf
 
 rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
-rocky-test-87: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
-rocky-test-87-clean: rocky-test-87 manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
-rocky-test-91: manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
-rocky-test-91-clean: rocky-test-91 manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
-rocky-test: rocky-test-87-clean rocky-test-91-clean
-rocky-release-87: rocky-test-87 release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
-rocky-release-91: rocky-test-91 release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
-rocky-release: rocky-release-87 rocky-release-91
-rocky-ovf-87: manifests/ovf/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).ovf
-rocky-ovf-91: manifests/ovf/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).ovf
-rocky-ovf: rocky-ovf-87 rocky-ovf-91
+rocky-8.7-test: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
+rocky-8.7-test-clean: rocky-8.7-test manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
+rocky-9.1-test: manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
+rocky-9.1-test-clean: rocky-9.1-test manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
+rocky-test: rocky-8.7-test-clean rocky-9.1-test-clean
+rocky-8.7-release: rocky-8.7-test release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
+rocky-9.1-release: rocky-9.1-test release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
+rocky-release: rocky-8.7-release rocky-9.1-release
+rocky-8.7-ovf: manifests/ovf/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).ovf
+rocky-9.1-ovf: manifests/ovf/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).ovf
+rocky-ovf: rocky-8.7-ovf rocky-9.1-ovf
 
 centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
-centos-test-79: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
-centos-test-79-clean: centos-test-79 manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
-centos-test: centos-test-79-clean
-centos-release-79: centos-test-79 release/d2iq-base-CentOS-7.9$(NAME_POSTFIX)
-centos-release: centos-release-79
-centos-ovf-79: manifests/ovf/d2iq-base-CentOS-7.9$(NAME_POSTFIX).ovf
-centos-ovf: centos-ovf-79
+centos-7.9-test: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
+centos-7.9-test-clean: centos-7.9-test manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
+centos-test: centos-7.9-test-clean
+centos-7.9-release: centos-7.9-test release/d2iq-base-CentOS-7.9$(NAME_POSTFIX)
+centos-release: centos-7.9-release
+centos-7.9-ovf: manifests/ovf/d2iq-base-CentOS-7.9$(NAME_POSTFIX).ovf
+centos-ovf: centos-7.9-ovf
 
 rhel: manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json
-rhel-test-79: manifests/tests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
-rhel-test-79-clean: rhel-test-79 manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
-rhel-test-84: manifests/tests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
-rhel-test-84-clean: rhel-test-84 manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
-rhel-test-86: manifests/tests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
-rhel-test-86-clean: rhel-test-86 manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
-rhel-test-88: manifests/tests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
-rhel-test-88-clean: rhel-test-88 manifests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
-rhel-test-810: manifests/tests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
-rhel-test-810-clean: rhel-test-810 manifests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
-rhel-test-94: manifests/tests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
-rhel-test-94-clean: rhel-test-94 manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
-rhel-test: rhel-test-86-clean rhel-test-88-clean rhel-test-810-clean rhel-test-94-clean
-rhel-release-79: rhel-test-79 release/d2iq-base-RHEL-79$(NAME_POSTFIX)
-rhel-release-84: rhel-test-84 release/d2iq-base-RHEL-84$(NAME_POSTFIX)
-rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
-rhel-release-88: rhel-test-88 release/d2iq-base-RHEL-88$(NAME_POSTFIX)
-rhel-release-810: rhel-test-810 release/d2iq-base-RHEL-810$(NAME_POSTFIX)
-rhel-release-94: rhel-test-94 release/d2iq-base-RHEL-94$(NAME_POSTFIX)
-rhel-release: rhel-release-86 rhel-release-88 rhel-release-810 rhel-release-94
-rhel-ovf-79: manifests/ovf/d2iq-base-RHEL-79$(NAME_POSTFIX).ovf
-rhel-ovf-84: manifests/ovf/d2iq-base-RHEL-84$(NAME_POSTFIX).ovf
-rhel-ovf-86: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
-rhel-ovf-88: manifests/ovf/d2iq-base-RHEL-88$(NAME_POSTFIX).ovf
-rhel-ovf-810: manifests/ovf/d2iq-base-RHEL-810$(NAME_POSTFIX).ovf
-rhel-ovf-94: manifests/ovf/d2iq-base-RHEL-94$(NAME_POSTFIX).ovf
-rhel-ovf: rhel-ovf-86 rhel-ovf-88 rhel-ovf-810 rhel-ovf-94
+rhel-7.9-test: manifests/tests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
+rhel-7.9-test-clean: rhel-7.9-test manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
+rhel-8.4-test: manifests/tests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
+rhel-8.4-test-clean: rhel-8.4-test manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
+rhel-8.6-test: manifests/tests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
+rhel-8.6-test-clean: rhel-8.6-test manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
+rhel-8.8-test: manifests/tests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
+rhel-8.8-test-clean: rhel-8.8-test manifests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
+rhel-8.10-test: manifests/tests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
+rhel-8.10-test-clean: rhel-8.10-test manifests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
+rhel-9.4-test: manifests/tests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
+rhel-9.4-test-clean: rhel-9.4-test manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
+rhel-test: rhel-8.6-test-clean rhel-8.8-test-clean rhel-8.10-test-clean rhel-9.4-test-clean
+rhel-7.9-release: rhel-7.9-test release/d2iq-base-RHEL-79$(NAME_POSTFIX)
+rhel-8.4-release: rhel-8.4-test release/d2iq-base-RHEL-84$(NAME_POSTFIX)
+rhel-8.6-release: rhel-8.6-test release/d2iq-base-RHEL-86$(NAME_POSTFIX)
+rhel-8.8-release: rhel-8.8-test release/d2iq-base-RHEL-88$(NAME_POSTFIX)
+rhel-8.10-release: rhel-8.10-test release/d2iq-base-RHEL-810$(NAME_POSTFIX)
+rhel-9.4-release: rhel-9.4-test release/d2iq-base-RHEL-94$(NAME_POSTFIX)
+rhel-release: rhel-8.6-release rhel-8.8-release rhel-8.10-release rhel-9.4-release
+rhel-7.9-ovf: manifests/ovf/d2iq-base-RHEL-79$(NAME_POSTFIX).ovf
+rhel-8.4-ovf: manifests/ovf/d2iq-base-RHEL-84$(NAME_POSTFIX).ovf
+rhel-8.6-ovf: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
+rhel-8.8-ovf: manifests/ovf/d2iq-base-RHEL-88$(NAME_POSTFIX).ovf
+rhel-8.10-ovf: manifests/ovf/d2iq-base-RHEL-810$(NAME_POSTFIX).ovf
+rhel-9.4-ovf: manifests/ovf/d2iq-base-RHEL-94$(NAME_POSTFIX).ovf
+rhel-ovf: rhel-8.6-ovf rhel-8.8-ovf rhel-8.10-ovf rhel-9.4-ovf
 
 oraclelinux: manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json
-oraclelinux-test-94: manifests/tests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
-oraclelinux-test-94-clean: oraclelinux-test-94 manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
-oraclelinux-test: oraclelinux-test-94-clean
-oraclelinux-release-94: oraclelinux-test-94 release/d2iq-base-OracleLinux-94$(NAME_POSTFIX)
-oraclelinux-release: oraclelinux-release-94
-oraclelinux-ovf-94: manifests/ovf/d2iq-base-OracleLinux-94$(NAME_POSTFIX).ovf
-oraclelinux-ovf: oraclelinux-ovf-94
+oraclelinux-9.4-test: manifests/tests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
+oraclelinux-9.4-test-clean: oraclelinux-9.4-test manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
+oraclelinux-test: oraclelinux-9.4-test-clean
+oraclelinux-9.4-release: oraclelinux-9.4-test release/d2iq-base-OracleLinux-94$(NAME_POSTFIX)
+oraclelinux-release: oraclelinux-9.4-release
+oraclelinux-9.4-ovf: manifests/ovf/d2iq-base-OracleLinux-94$(NAME_POSTFIX).ovf
+oraclelinux-ovf: oraclelinux-9.4-ovf
 
 flatcar: manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
-flatcar-test-3033: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
-flatcar-test-3033-clean: flatcar-test-3033 manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json.clean
-flatcar-test: flatcar-test-3033-clean
-flatcar-release-3033: flatcar-test-3033 release/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX)
-flatcar-release: flatcar-release-3033
-flatcar-ovf-3033: manifests/ovf/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).ovf
-flatcar-ovf: flatcar-ovf-3033
+flatcar-3033.3.16-test: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
+flatcar-3033.3.16-test-clean: flatcar-3033.3.16-test manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json.clean
+flatcar-test: flatcar-3033.3.16-test-clean
+flatcar-3033.3.16-release: flatcar-3033.3.16-test release/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX)
+flatcar-release: flatcar-3033.3.16-release
+flatcar-3033.3.16-ovf: manifests/ovf/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).ovf
+flatcar-ovf: flatcar-3033.3.16-ovf
 
 
 test-all: ubuntu-test rocky-test centos-test rhel-test oraclelinux-test
 release: ubuntu-release rocky-release centos-release rhel-release oraclelinux-release
+
+.PHONY: list-os-versions
+list-os-versions:
+	@grep -E '^.+-test-clean:' Makefile | grep -v '@grep' | sed 's/-test-clean//' | cut -d':' -f1  | sort | uniq
