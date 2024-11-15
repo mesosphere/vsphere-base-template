@@ -88,13 +88,6 @@ jobs:
             return approvedReviews.length >= requiredApprovals && hasIntegrationTestLabel;
 
   # Build matrix to test when label integration_test is added to PR or manually invoked.
-  output_check_approvals:
-    runs-on: self-hosted-nutanix-medium
-    needs: check_approvals
-    steps:
-      - name: Output check approvals
-        run: |
-          echo "ouputs: ${{ needs.check_approvals.outputs.result }}"
   build_list:
     runs-on:
       - self-hosted-nutanix-medium
@@ -109,6 +102,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: "${{ github.event.pull_request.head.sha }}"
+      - name: Empty OS matrix
+        id: empty-os-matrix
+        run: |
+          echo "buildmatrix=$(jq -cn --arg os_list '' '{os: $os_list | split(",")}')" >> $GITHUB_ENV
       - name: Build OS matrix for all OS
         if: contains(github.event.pull_request.labels.*.name, 'integration_test') || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
         id: build-os-matrix
@@ -127,11 +124,6 @@ jobs:
         id: build-os-matrix-single
         run: |
           echo "buildmatrix=$(jq -cn --arg os_list '${{ github.event.inputs.os }}' '{os: $os_list | split(",")}')" >> $GITHUB_ENV
-      - name: Empty OS matrix
-        id: empty-os-matrix
-        if: ${{ !contains(fromJson('["workflow_dispatch"]'), github.event_name) }}
-        run: |
-          echo "buildmatrix=$(jq -cn --arg os_list '' '{os: $os_list | split(",")}')" >> $GITHUB_ENV
       - name: Set matrix output
         id: set-matrix
         run: |
