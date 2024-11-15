@@ -78,11 +78,9 @@ jobs:
             console.log(`Approvals: ${approvedReviews.length}`);
             console.log(`Required approvals: ${requiredApprovals}`);
 
-            #fail the job if the required approvals are not met
             if (approvedReviews.length < requiredApprovals) {
               core.setFailed(`Required approvals not met. Current approvals: ${approvedReviews.length}`);
             }
-            #fail the job if the integration_test label is not present
             if (!hasIntegrationTestLabel) {
               core.setFailed('The integration_test label is required to run the integration tests');
             }
