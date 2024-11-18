@@ -90,7 +90,7 @@ jobs:
         RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
     - name: Export ovf for ${{ matrix.os }}
       run: make ${{ matrix.os }}-ovf
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: releaseovf
         path: |
@@ -102,7 +102,7 @@ jobs:
     outputs:
       listovf: ${{ steps.list.outputs.listovf }}
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         id: download
         with:
           name: releaseovf
@@ -123,7 +123,7 @@ jobs:
       matrix:
           ovf: ${{ fromJSON(needs.artifactinventory.outputs.listovf) }}
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       id: download
       with:
         name: releaseovf
