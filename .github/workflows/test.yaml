@@ -60,6 +60,7 @@ jobs:
       - name: Check for required approvals and integration_test label
         id: check_approvals
         uses: actions/github-script@v6
+        if: github.event_name != 'workflow_dispatch'
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
