@@ -7,6 +7,7 @@ VSPHERE_FOLDER ?= build-d2iq-base-templates
 RELEASE_FOLDER ?= d2iq-base-templates
 NAME_POSTFIX ?= -manual-build-$(shell whoami)
 
+PACKER_CACHE_DIR ?= ./packer_cache
 PACKER_ON_ERROR ?= cleanup
 
 manifests/d2iq-base-%$(NAME_POSTFIX).json: packer.initialized vsphere.pkr.hcl $(GOVC)
@@ -52,7 +53,6 @@ ubuntu-ovf-20: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
 ubuntu-ovf-22: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
 ubuntu-ovf: ubuntu-ovf-20 ubuntu-ovf-22
 
-
 rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
 rocky-test-87: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
 rocky-test-87-clean: rocky-test-87 manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
@@ -84,17 +84,34 @@ rhel-test-86: manifests/tests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
 rhel-test-86-clean: rhel-test-86 manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
 rhel-test-88: manifests/tests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
 rhel-test-88-clean: rhel-test-88 manifests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
-rhel-test: rhel-test-79-clean rhel-test-84-clean rhel-test-86-clean rhel-test-88-clean
+rhel-test-810: manifests/tests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
+rhel-test-810-clean: rhel-test-810 manifests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
+rhel-test-94: manifests/tests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
+rhel-test-94-clean: rhel-test-94 manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
+rhel-test: rhel-test-86-clean rhel-test-88-clean rhel-test-810-clean rhel-test-94-clean
 rhel-release-79: rhel-test-79 release/d2iq-base-RHEL-79$(NAME_POSTFIX)
 rhel-release-84: rhel-test-84 release/d2iq-base-RHEL-84$(NAME_POSTFIX)
 rhel-release-86: rhel-test-86 release/d2iq-base-RHEL-86$(NAME_POSTFIX)
 rhel-release-88: rhel-test-88 release/d2iq-base-RHEL-88$(NAME_POSTFIX)
-rhel-release: rhel-release-79 rhel-release-84 rhel-release-86 rhel-release-88
+rhel-release-810: rhel-test-810 release/d2iq-base-RHEL-810$(NAME_POSTFIX)
+rhel-release-94: rhel-test-94 release/d2iq-base-RHEL-94$(NAME_POSTFIX)
+rhel-release: rhel-release-86 rhel-release-88 rhel-release-810 rhel-release-94
 rhel-ovf-79: manifests/ovf/d2iq-base-RHEL-79$(NAME_POSTFIX).ovf
 rhel-ovf-84: manifests/ovf/d2iq-base-RHEL-84$(NAME_POSTFIX).ovf
 rhel-ovf-86: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
 rhel-ovf-88: manifests/ovf/d2iq-base-RHEL-88$(NAME_POSTFIX).ovf
-rhel-ovf: rhel-ovf-79 rhel-ovf-84 rhel-ovf-86 rhel-ovf-88
+rhel-ovf-810: manifests/ovf/d2iq-base-RHEL-810$(NAME_POSTFIX).ovf
+rhel-ovf-94: manifests/ovf/d2iq-base-RHEL-94$(NAME_POSTFIX).ovf
+rhel-ovf: rhel-ovf-86 rhel-ovf-88 rhel-ovf-810 rhel-ovf-94
+
+oraclelinux: manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json
+oraclelinux-test-94: manifests/tests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
+oraclelinux-test-94-clean: oraclelinux-test-94 manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
+oraclelinux-test: oraclelinux-test-94-clean
+oraclelinux-release-94: oraclelinux-test-94 release/d2iq-base-OracleLinux-94$(NAME_POSTFIX)
+oraclelinux-release: oraclelinux-release-94
+oraclelinux-ovf-94: manifests/ovf/d2iq-base-OracleLinux-94$(NAME_POSTFIX).ovf
+oraclelinux-ovf: oraclelinux-ovf-94
 
 flatcar: manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
 flatcar-test-3033: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
@@ -106,5 +123,5 @@ flatcar-ovf-3033: manifests/ovf/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).ovf
 flatcar-ovf: flatcar-ovf-3033
 
 
-test-all: ubuntu-test rocky-test centos-test rhel-test
-release: ubuntu-release rocky-release centos-release rhel-release
+test-all: ubuntu-test rocky-test centos-test rhel-test oraclelinux-test
+release: ubuntu-release rocky-release centos-release rhel-release oraclelinux-release

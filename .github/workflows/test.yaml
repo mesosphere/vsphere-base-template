@@ -1,18 +1,32 @@
 name: test base images
 on:
   pull_request_target:
-    types: 
+    types:
       - labeled
       - opened
       - synchronize
+  # Enable manual invocation of this workflow GitHub Actions GUI
+  workflow_dispatch:
+    inputs:
+      os:
+        description: "The OS to run the integration test with"
+        type: choice
+        required: true
+        options:
+          - ubuntu
+          - rocky
+          - centos
+          - rhel
+          - flatcar
+
 jobs:
   base_image_tests:
-    runs-on: 
-    - self-hosted-nutanix-medium
+    runs-on:
+      - self-hosted-nutanix-medium
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu", "rocky", "centos", "rhel", "flatcar"]
+        os: ["ubuntu", "rocky", "centos", "rhel", "oraclelinux", "flatcar"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,6 +40,35 @@ jobs:
       - name: Run integration tests for ${{ matrix.os }}
         run: make ${{ matrix.os }}-test
         if: contains(github.event.pull_request.labels.*.name, 'integration_test')
+        env:
+          VSPHERE_USERNAME: ${{ secrets.VSPHERE_SRE_USERNAME }}
+          VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
+          VSPHERE_SERVER: ${{ secrets.VSPHERE_SERVER }}
+          GOVC_URL: ${{ secrets.VSPHERE_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_SERVER }}
+          PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
+          PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
+          PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_TEST_DATASTORE }}
+          PKR_VAR_vsphere_network: ${{ secrets.VSPHERE_NETWORK }}
+          PKR_VAR_vsphere_resource_pool: ${{ secrets.VSPHERE_RESOURCE_POOL }}
+          RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
+          RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
+
+  # Invoke the test manually.
+  base_image_test:
+    if: contains(fromJson('["workflow_dispatch"]'), github.event_name)
+    runs-on:
+      - self-hosted-nutanix-medium
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: "${{ github.event.pull_request.head.sha }}"
+      - name: Setup requirements
+        run: |
+          sudo apt-get update && sudo apt-get -y install xorriso
+          curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
+      - name: Run integration tests for ${{ matrix.os }}
+        run: make ${{ matrix.os }}-test
         env:
           VSPHERE_USERNAME: ${{ secrets.VSPHERE_SRE_USERNAME }}
           VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}

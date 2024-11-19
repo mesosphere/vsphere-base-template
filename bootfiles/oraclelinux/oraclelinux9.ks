@@ -60,7 +60,6 @@ open-vm-tools
 %end
 
 # Enable/disable the following services
-firewall --enabled --port=22:tcp --port=25:tcp --ssh
 services --enabled=sshd
 
 %post --logfile=/mnt/sysimage/root/ks-post.log --erroronfail
