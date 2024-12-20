@@ -58,13 +58,17 @@ rocky-8.7-test: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.cle
 rocky-8.7-test-clean: rocky-8.7-test manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
 rocky-9.1-test: manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
 rocky-9.1-test-clean: rocky-9.1-test manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
-rocky-test: rocky-8.7-test-clean rocky-9.1-test-clean
+rocky-9.5-test: manifests/tests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
+rocky-9.5-test-clean: rocky-9.5-test manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
+rocky-test: rocky-8.7-test-clean rocky-9.1-test-clean rocky-9.5-test-clean
 rocky-8.7-release: rocky-8.7-test release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
 rocky-9.1-release: rocky-9.1-test release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
-rocky-release: rocky-8.7-release rocky-9.1-release
+rocky-9.5-release: rocky-9.5-test release/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX)
+rocky-release: rocky-8.7-release rocky-9.1-release rocky-9.5-release
 rocky-8.7-ovf: manifests/ovf/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).ovf
 rocky-9.1-ovf: manifests/ovf/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).ovf
-rocky-ovf: rocky-8.7-ovf rocky-9.1-ovf
+rocky-9.5-ovf: manifests/ovf/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).ovf
+rocky-ovf: rocky-8.7-ovf rocky-9.1-ovf rocky-9.5-ovf
 
 centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-7.9-test: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
@@ -75,11 +79,7 @@ centos-release: centos-7.9-release
 centos-7.9-ovf: manifests/ovf/d2iq-base-CentOS-7.9$(NAME_POSTFIX).ovf
 centos-ovf: centos-7.9-ovf
 
-rhel: manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json
-rhel-7.9-test: manifests/tests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
-rhel-7.9-test-clean: rhel-7.9-test manifests/d2iq-base-RHEL-79$(NAME_POSTFIX).json.clean
-rhel-8.4-test: manifests/tests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
-rhel-8.4-test-clean: rhel-8.4-test manifests/d2iq-base-RHEL-84$(NAME_POSTFIX).json.clean
+rhel: manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-88$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-810$(NAME_POSTFIX).json manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json
 rhel-8.6-test: manifests/tests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
 rhel-8.6-test-clean: rhel-8.6-test manifests/d2iq-base-RHEL-86$(NAME_POSTFIX).json.clean
 rhel-8.8-test: manifests/tests/d2iq-base-RHEL-88$(NAME_POSTFIX).json.clean
@@ -89,15 +89,11 @@ rhel-8.10-test-clean: rhel-8.10-test manifests/d2iq-base-RHEL-810$(NAME_POSTFIX)
 rhel-9.4-test: manifests/tests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
 rhel-9.4-test-clean: rhel-9.4-test manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
 rhel-test: rhel-8.6-test-clean rhel-8.8-test-clean rhel-8.10-test-clean rhel-9.4-test-clean
-rhel-7.9-release: rhel-7.9-test release/d2iq-base-RHEL-79$(NAME_POSTFIX)
-rhel-8.4-release: rhel-8.4-test release/d2iq-base-RHEL-84$(NAME_POSTFIX)
 rhel-8.6-release: rhel-8.6-test release/d2iq-base-RHEL-86$(NAME_POSTFIX)
 rhel-8.8-release: rhel-8.8-test release/d2iq-base-RHEL-88$(NAME_POSTFIX)
 rhel-8.10-release: rhel-8.10-test release/d2iq-base-RHEL-810$(NAME_POSTFIX)
 rhel-9.4-release: rhel-9.4-test release/d2iq-base-RHEL-94$(NAME_POSTFIX)
 rhel-release: rhel-8.6-release rhel-8.8-release rhel-8.10-release rhel-9.4-release
-rhel-7.9-ovf: manifests/ovf/d2iq-base-RHEL-79$(NAME_POSTFIX).ovf
-rhel-8.4-ovf: manifests/ovf/d2iq-base-RHEL-84$(NAME_POSTFIX).ovf
 rhel-8.6-ovf: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
 rhel-8.8-ovf: manifests/ovf/d2iq-base-RHEL-88$(NAME_POSTFIX).ovf
 rhel-8.10-ovf: manifests/ovf/d2iq-base-RHEL-810$(NAME_POSTFIX).ovf
