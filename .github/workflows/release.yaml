@@ -125,21 +125,23 @@ jobs:
     runs-on: self-hosted-nutanix-medium
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.build_list.outputs.matrix)}}
+      matrix: 
+        os: 
+          - ubuntu-20
+          - ubuntu-22
+          - rocky-8.7
+          - rocky-9.1
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
       - name: Setup requirements
-        if: !startsWith(matrix.os, 'rhel') && !startsWith(matrix.os, 'oraclelinux')
         run: |
           sudo apt-get update && sudo apt-get -y install xorriso
       - name: Export ovf for ${{ matrix.os }}
-        if: !startsWith(matrix.os, 'rhel') && !startsWith(matrix.os, 'oraclelinux')
         run: make ${{ matrix.os }}-ovf
       - uses: actions/upload-artifact@v3
-        if: !startsWith(matrix.os, 'rhel') && !startsWith(matrix.os, 'oraclelinux')
         with:
           name: releaseovf
           path: |
