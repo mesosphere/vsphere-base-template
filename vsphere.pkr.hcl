@@ -208,7 +208,6 @@ locals {
     "RHEL"            = "${path.root}/bootfiles/rhel/rhel8.ks"
     "RockyLinux"      = "${path.root}/bootfiles/rocky/rocky.ks"
     "RockyLinux-8.7"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
-    "RockyLinux-9.1"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
     "RockyLinux-9.5"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
     "CentOS"          = "${path.root}/bootfiles/centos/centos7.ks"
     "OracleLinux"     = "${path.root}/bootfiles/oraclelinux/oraclelinux9.ks"

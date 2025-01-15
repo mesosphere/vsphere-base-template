@@ -53,22 +53,18 @@ ubuntu-ovf-20: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
 ubuntu-ovf-22: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
 ubuntu-ovf: ubuntu-ovf-20 ubuntu-ovf-22
 
-rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json
+rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json
 rocky-test-87: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
 rocky-test-87-clean: rocky-test-87 manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
-rocky-test-91: manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
-rocky-test-91-clean: rocky-test-91 manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
 rocky-test-95: manifests/tests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
-rocky-test-95-clean: rocky-test-91 manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
-rocky-test: rocky-test-87-clean rocky-test-91-clean rocky-test-95-clean
+rocky-test-95-clean: manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
+rocky-test: rocky-test-87-clean rocky-test-95-clean
 rocky-release-87: rocky-test-87 release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
-rocky-release-91: rocky-test-91 release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
 rocky-release-95: rocky-test-95 release/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX)
-rocky-release: rocky-release-87 rocky-release-91 rocky-release-95
+rocky-release: rocky-release-87 rocky-release-95
 rocky-ovf-87: manifests/ovf/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).ovf
-rocky-ovf-91: manifests/ovf/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).ovf
 rocky-ovf-95: manifests/ovf/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).ovf
-rocky-ovf: rocky-ovf-87 rocky-ovf-91 rocky-ovf-95
+rocky-ovf: rocky-ovf-87 rocky-ovf-95
 
 centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-test-79: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
