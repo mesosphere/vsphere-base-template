@@ -11,6 +11,7 @@ PACKER_CACHE_DIR ?= ./packer_cache
 PACKER_ON_ERROR ?= cleanup
 
 manifests/d2iq-base-%$(NAME_POSTFIX).json: packer.initialized vsphere.pkr.hcl $(GOVC)
+	echo test
 	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=$(shell basename -s .json $@) -var vm_name_prefix="" -var vm_name_postfix="" -on-error="$(PACKER_ON_ERROR)"  -var-file=./images/base-$*.pkrvar.hcl -var manifest_output=$@ vsphere.pkr.hcl
 
 .PHONY: manifests/d2iq-base-%$(NAME_POSTFIX).json.clean
