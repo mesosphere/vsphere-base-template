@@ -33,7 +33,7 @@ skipx
 timezone UTC
 
 # Add a user named builder
-user --name=${ssh_username}
+user --name=${ssh_username} --password=test
 sshkey --username=${ssh_username} "${public_key}"
 
 # System bootloader configuration
@@ -76,6 +76,7 @@ dnf makecache
 dnf install epel-release -y
 dnf makecache
 dnf install -y sudo open-vm-tools perl cloud-init cloud-utils-growpart
+dnf install -y openssh-server
 
 # Disable swap
 swapoff -a

@@ -189,6 +189,10 @@ variable "bootconfig_type" {
   default = "cloudinit"
 }
 
+variable "cloud_init_from_source" {
+  default = false
+}
+
 data "sshkey" "install" {
   name = "base-image-build"
 }
@@ -207,9 +211,7 @@ locals {
     "RHEL-7"          = "${path.root}/bootfiles/rhel/rhel7.ks"
     "RHEL"            = "${path.root}/bootfiles/rhel/rhel8.ks"
     "RockyLinux"      = "${path.root}/bootfiles/rocky/rocky.ks"
-    "RockyLinux-8.7"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
-    "RockyLinux-9.1"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
-    "RockyLinux-9.5"  = "${path.root}/bootfiles/rocky/rocky-vault.ks"
+    "RockyLinux-9.5"  = "${path.root}/bootfiles/rocky/rocky.ks"
     "CentOS"          = "${path.root}/bootfiles/centos/centos7.ks"
     "OracleLinux"     = "${path.root}/bootfiles/oraclelinux/oraclelinux9.ks"
     "Ubuntu"          = "${path.root}/bootfiles/ubuntu/autoinstall.yaml"
@@ -287,7 +289,7 @@ locals {
   default_firmware = "bios"
   # lookup by <distro_name>-<distro_version> fallback to <distro_version> fallback to local.default_firmware
   distro_firmware_lookup = {
-    "Ubuntu" = "efi-secure"
+    "Ubuntu" = "efi"
   }
 
   default_bootwait = "10s"
@@ -409,6 +411,8 @@ source "vsphere-iso" "baseimage" {
 }
 
 locals {
+  rhel_cloud_init = var.cloud_init_from_source ? "${path.root}/scripts/common/cloudinit_from_source.sh" : "${path.root}/scripts/el/install_cloud_tools.sh"
+  rhel_cloud_init_final = var.cloud_init_from_source ? "${path.root}/scripts/el/cloudinit_from_source_final.sh" : ""
   distro_build_scripts = {
     "Ubuntu" = [
       "${path.root}/scripts/ubuntu/install_open_vm_tools.sh",
@@ -428,13 +432,14 @@ locals {
       "${path.root}/scripts/el/cleanup_yum.sh",
       "${path.root}/scripts/el/rhn_remove_subscription.sh"
     ],
-    "RHEL" = [
+    "RHEL" = compact([
       "${path.root}/scripts/el/rhn_add_subscription.sh",
       "${path.root}/scripts/el/install_open_vm_tools.sh",
-      "${path.root}/scripts/el/install_cloud_tools.sh",
+      local.rhel_cloud_init,
+      local.rhel_cloud_init_final,
       "${path.root}/scripts/el/cleanup_dnf.sh",
       "${path.root}/scripts/el/rhn_remove_subscription.sh"
-    ],
+    ]),
     "RockyLinux" = [
       "${path.root}/scripts/el/install_open_vm_tools.sh",
       "${path.root}/scripts/el/cleanup_dnf.sh"

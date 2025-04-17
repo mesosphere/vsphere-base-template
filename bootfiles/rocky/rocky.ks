@@ -2,6 +2,9 @@ cdrom
 # Use text mode install
 text
 
+# Don't run the Setup Agent on first boot
+firstboot --disabled
+
 # License agreement
 eula --agreed
 
@@ -15,8 +18,9 @@ keyboard --vckeymap=us --xlayouts='us'
 url --mirrorlist=https://mirrors.rockylinux.org/mirrorlist?arch=$basearch&repo=rocky-BaseOS-${distribution_version}
 repo --name=AppStream --mirrorlist=https://mirrors.rockylinux.org/mirrorlist?arch=$basearch&repo=rocky-AppStream-${distribution_version}
 
+
 # Network information
-network --bootproto=dhcp --device=link --activate
+network --bootproto=dhcp  --onboot=on --device=link --ipv6=auto --activate
 
 ### Lock the root account
 rootpw --lock
@@ -37,12 +41,12 @@ user --name=${ssh_username}
 sshkey --username=${ssh_username} "${public_key}"
 
 # System bootloader configuration
-bootloader --location=mbr
+bootloader --location=mbr --boot-drive=sda
 
 # Clear the Master Boot Record
 zerombr
 
-clearpart --all --initlabel
+clearpart --all --initlabel --drives=sda
 part / --fstype="ext4" --grow --asprimary --label=slash --ondisk=sda
 
 %packages --excludedocs
@@ -56,11 +60,33 @@ python3
 open-vm-tools
 
 # Exclude unnecessary firmwares
--iwl*firmware
+-aic94xx-firmware
+-atmel-firmware
+-b43-openfwwf
+-bfa-firmware
+-ipw2100-firmware
+-ipw2200-firmware
+-ivtv-firmware
+-iwl*-firmware
+-libertas-usb8388-firmware
+-ql*-firmware
+-rt61pci-firmware
+-rt73usb-firmware
+-xorg-x11-drv-ati-firmware
+-zd1211-firmware
+-cockpit
+-quota
+-alsa-*
+-fprintd-pam
+-intltool
+-microcode_ctl
+%end
+
+%addon com_redhat_kdump --disable
 %end
 
 # Enable/disable the following services
-services --enabled=sshd
+services --enabled="sshd,NetworkManager,chronyd"
 
 %post --logfile=/mnt/sysimage/root/ks-post.log --erroronfail
 # Disable quiet boot and splash screen
@@ -75,6 +101,9 @@ dnf makecache
 dnf install epel-release -y
 dnf makecache
 dnf install -y sudo open-vm-tools perl cloud-init cloud-utils-growpart
+
+systemctl enable vmtoolsd
+systemctl start vmtoolsd
 
 # Disable swap
 swapoff -a
