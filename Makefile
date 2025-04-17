@@ -53,18 +53,14 @@ ubuntu-20-ovf: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
 ubuntu-22-ovf: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
 ubuntu-ovf: ubuntu-20-ovf ubuntu-22-ovf
 
-rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json
-rocky-test-87: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
-rocky-test-87-clean: rocky-test-87 manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
+rocky: manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json
 rocky-test-95: manifests/tests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
 rocky-test-95-clean: manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
-rocky-test: rocky-test-87-clean rocky-test-95-clean
-rocky-release-87: rocky-test-87 release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
+rocky-test: rocky-test-95-clean
 rocky-release-95: rocky-test-95 release/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX)
-rocky-release: rocky-release-87 rocky-release-95
-rocky-ovf-87: manifests/ovf/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).ovf
+rocky-release: rocky-release-95
 rocky-ovf-95: manifests/ovf/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).ovf
-rocky-ovf: rocky-ovf-87 rocky-ovf-95
+rocky-ovf: rocky-ovf-95
 
 centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-7.9-test: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
