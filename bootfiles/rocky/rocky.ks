@@ -58,7 +58,6 @@ sed
 sudo
 python3
 open-vm-tools
-cloud-utils
 
 # Exclude unnecessary firmwares
 -aic94xx-firmware
