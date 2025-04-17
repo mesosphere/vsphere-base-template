@@ -145,7 +145,7 @@ jobs:
           sudo apt-get update && sudo apt-get -y install xorriso
       - name: Export ovf for ${{ matrix.os }}
         run: make ${{ matrix.os }}-ovf
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: releaseovf
           path: |
@@ -179,7 +179,7 @@ jobs:
       matrix:
         ovf: ${{ fromJSON(needs.artifactinventory.outputs.listovf) }}
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         id: download
         with:
           name: releaseovf
