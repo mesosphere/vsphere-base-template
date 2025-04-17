@@ -39,6 +39,9 @@ env:
   VSPHERE_USERNAME: ${{ secrets.VSPHERE_NKP_SRE_USERNAME }}
   VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
   VSPHERE_SERVER: "${{ secrets.VSPHERE_NKP_SERVER }}"
+  GOVC_USERNAME: ${{ secrets.VSPHERE_NKP_SRE_USERNAME }}
+  GOVC_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
+  GOVC_URL: ${{ secrets.VSPHERE_NKP_SERVER }}
   PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
   PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
   PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_NKP_DATASTORE }}
@@ -149,5 +152,4 @@ jobs:
           curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
       - name: Run integration tests for ${{ matrix.os }}
         run: |
-          export GOVC_URL='${{ secrets.VSPHERE_NKP_SRE_USERNAME }}':'${{ secrets.VSPHERE_SRE_PASSWORD }}'@${{ secrets.VSPHERE_NKP_SERVER }}
           make ${{ matrix.os }}-test
