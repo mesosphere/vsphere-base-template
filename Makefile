@@ -53,7 +53,7 @@ ubuntu-20-ovf: manifests/ovf/d2iq-base-Ubuntu-20.04$(NAME_POSTFIX).ovf
 ubuntu-22-ovf: manifests/ovf/d2iq-base-Ubuntu-22.04$(NAME_POSTFIX).ovf
 ubuntu-ovf: ubuntu-20-ovf ubuntu-22-ovf
 
-rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json
+rocky: manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json  manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json
 rocky-8.7-test: manifests/tests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
 rocky-8.7-test-clean: rocky-8.7-test manifests/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).json.clean
 rocky-9.1-test: manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
