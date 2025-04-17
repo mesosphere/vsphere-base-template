@@ -31,6 +31,7 @@ on:
           - os-ubuntu
           - rocky-8.7
           - rocky-9.1
+          - rocky-9.5
           - os-rocky
           - centos-7.9
           - os-centos
@@ -131,6 +132,7 @@ jobs:
           - ubuntu-22
           - rocky-8.7
           - rocky-9.1
+          - rocky-9.5
     steps:
       - uses: actions/checkout@v3
         with:
