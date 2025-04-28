@@ -132,4 +132,4 @@ list-os-versions:
 	f1  | sort | uniq
 
 test:
-  echo test4
+  	@echo test4
