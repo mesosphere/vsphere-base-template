@@ -5,8 +5,6 @@ on:
       - labeled
       - opened
       - synchronize
-  pull_request_review:
-    types: [submitted]
   # Enable manual invocation of this workflow GitHub Actions GUI
   workflow_dispatch:
     inputs:
