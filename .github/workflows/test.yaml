@@ -5,8 +5,6 @@ on:
       - labeled
       - opened
       - synchronize
-  pull_request_review:
-    types: [submitted]
   # Enable manual invocation of this workflow GitHub Actions GUI
   workflow_dispatch:
     inputs:
@@ -51,41 +49,11 @@ jobs:
   check_approvals:
     runs-on: self-hosted-nutanix-medium
     outputs:
-      result: ${{ steps.check_approvals.outputs.result }}
+      result: ${{ steps.check_approvals.outputs.status }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Check for required approvals and integration_test label
+      - name: Check integration test allowance status
         id: check_approvals
-        uses: actions/github-script@v6
-        if: github.event_name != 'workflow_dispatch'
-        with:
-          script: |
-            const prNumber = context.payload.pull_request.number;
-            const { data: reviews } = await github.rest.pulls.listReviews({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-
-            const approvedReviews = reviews.filter(review => review.state === 'APPROVED');
-            const requiredApprovals = 1;  // Set the number of required approvals here
-
-            const labels = context.payload.pull_request.labels.map(label => label.name);
-            const hasIntegrationTestLabel = labels.includes('integration_test') || labels.includes('skip_integration');
-
-            console.log(`Approvals: ${approvedReviews.length}`);
-            console.log(`Required approvals: ${requiredApprovals}`);
-
-            if (approvedReviews.length < requiredApprovals) {
-              core.setFailed(`Required approvals not met. Current approvals: ${approvedReviews.length}`);
-            }
-            if (!hasIntegrationTestLabel) {
-              core.setFailed('The integration_test label is required to run the integration tests');
-            }
-
-            return approvedReviews.length >= requiredApprovals && hasIntegrationTestLabel;
+        uses: nutanix-cloud-native/action-check-approvals@v1
 
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   build_list:
