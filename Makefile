@@ -128,8 +128,4 @@ release: ubuntu-release rocky-release centos-release rhel-release oraclelinux-re
 
 .PHONY: list-os-versions
 list-os-versions:
-	@grep -E '^.+-test-clean:' Makefile | grep -v '@grep' | sed 's/-test-clean//' | cut -d':' -
-	f1  | sort | uniq
-
-test:
-  	@echo test4
+	@grep -E '^.+-test-clean:' Makefile | grep -v '@grep' | sed 's/-test-clean//' | cut -d':' -f1  | sort | uniq
