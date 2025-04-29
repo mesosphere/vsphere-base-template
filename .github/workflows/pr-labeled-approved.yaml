@@ -1,11 +1,15 @@
+---
 name: 'PR Labeled Approved'
-permissions:
-    contents: read
-    pull-requests: read
+
 on:
-    pull_request_review:
-        types: [submitted]
-    pull_request:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
 
 jobs:
   check_approvals:
@@ -16,6 +20,6 @@ jobs:
     steps:
       - name: Check integration test allowance status
         id: check_approvals
-        uses: nutanix-cloud-native/action-check-approvals
+        uses: nutanix-cloud-native/action-check-approvals@main
         with:
           approval_labels: integration_test
