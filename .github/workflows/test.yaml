@@ -53,7 +53,7 @@ jobs:
     steps:
       - name: Check integration test allowance status
         id: check_approvals
-        uses: nutanix-cloud-native/action-check-approvals@v1
+        uses: nutanix-cloud-native/action-check-approvals
         with:
           approval_labels: integration_test
 
