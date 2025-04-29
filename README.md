@@ -72,4 +72,4 @@ After successfully testing a template the test vm and its template are being del
 The release target for each distribution e.g. `ubuntu-release` will run a normal build process and then rename the instance to delete its build postfix. After renaming the template will be moved from the build folder (`VSPHERE_FOLDER`) into `RELEASE_FOLDER` which is by default `d2iq-base-templates`
 
 
-test test
+test test test
