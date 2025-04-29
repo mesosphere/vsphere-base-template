@@ -1,0 +1,22 @@
+name: 'PR Labeled Approved'
+permissions:
+    contents: read
+    pull-requests: read
+on:
+    pull_request_review:
+        types: [submitted]
+    pull_request_target:
+        types: [labeled]
+
+jobs:
+    check_approvals:
+        if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request_review'
+        runs-on: self-hosted-nutanix-medium
+        outputs:
+            result: ${{ steps.check_approvals.outputs.status }}
+        steps:
+        - name: Check integration test allowance status
+          id: check_approvals
+          uses: nutanix-cloud-native/action-check-approvals
+          with:
+            approval_labels: integration_test

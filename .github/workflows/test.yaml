@@ -1,11 +1,9 @@
 name: test base images
 on:
-  pull_request_target:
+  workflow_run:
+    workflows: ["PR Labeled Approved"]
     types:
-      - labeled
-      - opened
-      - synchronize
-  # Enable manual invocation of this workflow GitHub Actions GUI
+      - completed
   workflow_dispatch:
     inputs:
       os:
@@ -46,39 +44,42 @@ env:
   RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
 
 jobs:
-  check_approvals:
+  # if this is workflow_dispatch get the ref. If this is workflow_run get ref from the workflow_run context
+  event_and_ref:
+    if: ${{ github.event_name == 'workflow_dispatch' || ( github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion != 'cancelled' ) }}
     runs-on: self-hosted-nutanix-medium
     outputs:
-      result: ${{ steps.check_approvals.outputs.status }}
+      ref: ${{ steps.set-ref.outputs.ref }}
+      event: ${{ github.event_name }}
     steps:
-      - name: Check integration test allowance status
-        id: check_approvals
-        uses: nutanix-cloud-native/action-check-approvals
-        with:
-          approval_labels: integration_test
-
-
+      - name: Set ref
+        id: set-ref
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "ref=${{ github.ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "ref=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
+          fi
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   build_list:
+    needs: event_and_ref
     runs-on:
       - self-hosted-nutanix-medium
-    needs: check_approvals
     strategy:
       fail-fast: false
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-    if: ${{ needs.check_approvals.outputs.result == 'true' || contains(fromJson('["workflow_dispatch"]'), github.event_name) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: "${{ github.event.pull_request.head.sha }}"
+          ref: "${{ needs.event_and_ref.outputs.ref }}"
       - name: Empty OS matrix
         id: empty-os-matrix
         run: |
           echo "buildmatrix=$(jq -cn --arg os_list '' '{os: $os_list | split(",")}')" >> $GITHUB_ENV
       - name: Build OS matrix for all OS
-        if: contains(github.event.pull_request.labels.*.name, 'integration_test') || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
+        if: needs.event_and_ref.outputs.event == 'workflow_run' || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
         id: build-os-matrix
         run: |
           DYNAMICOSLIST=$(make list-os-versions | head -c -1  | tr '\n' ',')
