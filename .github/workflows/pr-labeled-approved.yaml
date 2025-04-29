@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   check_approvals:
-    if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request_review'
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review'
     runs-on: self-hosted-nutanix-medium
     outputs:
       result: ${{ steps.check_approvals.outputs.status }}
