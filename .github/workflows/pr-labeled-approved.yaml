@@ -8,14 +8,14 @@ on:
     pull_request:
 
 jobs:
-    check_approvals:
-        if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request_review'
-        runs-on: self-hosted-nutanix-medium
-        outputs:
-            result: ${{ steps.check_approvals.outputs.status }}
-        steps:
-        - name: Check integration test allowance status
-          id: check_approvals
-          uses: nutanix-cloud-native/action-check-approvals
-          with:
-            approval_labels: integration_test
+  check_approvals:
+    if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request_review'
+    runs-on: self-hosted-nutanix-medium
+    outputs:
+      result: ${{ steps.check_approvals.outputs.status }}
+    steps:
+      - name: Check integration test allowance status
+        id: check_approvals
+        uses: nutanix-cloud-native/action-check-approvals
+        with:
+          approval_labels: integration_test
