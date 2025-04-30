@@ -62,7 +62,7 @@ jobs:
       - name: Check integration test allowance status
         if: ${{ github.event_name == 'pull_request_target' }}
         id: check_approvals
-        uses: nutanix-cloud-native/action-check-approvals@main
+        uses: nutanix-cloud-native/action-check-approvals@v1
         with:
           approval_labels: 'integration_test'
 
@@ -128,3 +128,30 @@ jobs:
           curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
       - name: Run integration tests for ${{ matrix.os }}
         run: make ${{ matrix.os }}-test
+
+# How to Use the `check_approvals` Job
+
+The `check_approvals` job is designed to verify whether integration tests are allowed to run based on specific conditions. Here's how it works and how to use it:
+
+## When Does It Run?
+- **Manually Triggered (`workflow_dispatch`)**: The job always allows integration tests to proceed.
+- **Pull Request Events (`pull_request` or `pull_request_target`)**:
+  - If the pull request originates from the same repository, the job checks for the presence of the `integration_test` label.
+  - If the pull request originates from a fork, the job additionally requires approval via the `integration_test` label.
+
+## Outputs
+- `check_approvals`: Indicates whether integration tests are allowed (`true` or `false`).
+- `external_pr`: Indicates whether the pull request is from a fork (`true` or `false`).
+- `event_ref`: Provides the reference to the commit or branch being tested.
+
+## How to Add the `integration_test` Label
+1. Navigate to the pull request in GitHub.
+2. Add the label `integration_test` to the pull request.
+3. If the pull request is from a fork, ensure the label is approved by a maintainer.
+
+## Example Usage
+The `check_approvals` job is used as a prerequisite for the `build_list` job. Based on its outputs:
+- Internal pull requests with the `integration_test` label proceed automatically.
+- External pull requests require approval via the `integration_test` label.
+
+For more details, refer to the `check_approvals` job definition in the workflow file.
