@@ -1,9 +1,9 @@
 name: test base images
 on:
-  workflow_run:
-    workflows: ["PR Labeled Approved"]
-    types:
-      - completed
+  pull_request:
+    types: [labeled, unlabeled, synchronize, opened, reopened]
+  pull_request_target:
+    types: [labeled, unlabeled, synchronize, opened, reopened]
   workflow_dispatch:
     inputs:
       os:
@@ -44,25 +44,27 @@ env:
   RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
 
 jobs:
-  # if this is workflow_dispatch get the ref. If this is workflow_run get ref from the workflow_run context
-  event_and_ref:
-    if: ${{ github.event_name == 'workflow_dispatch' || ( github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion != 'cancelled' ) }}
+  check_approvals:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' && github.event.pull_request.base.repo.clone_url == github.event.pull_request.head.repo.clone_url || github.event_name == 'pull_request_target' && github.event.pull_request.base.repo.clone_url != github.event.pull_request.head.repo.clone_url }}
     runs-on: self-hosted-nutanix-medium
     outputs:
-      ref: ${{ steps.set-ref.outputs.ref }}
-      event: ${{ github.event_name }}
+      # return the status of the check_approvals job when event type is pull_request_target else return 'true'
+      check_approvals: ${{ github.event_name == 'pull_request_target' && steps.check_approvals.outputs.check_approvals || 'true' }}
+      external_pr: ${{ github.event.pull_request.base.repo.clone_url != github.event.pull_request.head.repo.clone_url }}
+      # set ref to pullgithub.event.pull_request.head.sha when pull_request_target or pull_request event or set to github.ref when workflow_dispatch event
+      event_ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.event_name == 'pull_request_target' && github.event.pull_request.head.sha }}
     steps:
-      - name: Set ref
-        id: set-ref
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "ref=${{ github.ref }}" >> $GITHUB_OUTPUT
-          else
-            echo "ref=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
-          fi
+      - name: Check integration test allowance status
+        if: ${{ github.event_name == 'pull_request_target' }}
+        id: check_approvals
+        uses: nutanix-cloud-native/action-check-approvals@main
+        with:
+          approval_labels: 'integration_test'
+
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   build_list:
-    needs: event_and_ref
+    needs: check_approvals
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' && needs.check_approvals.outputs.external_pr == 'false' || github.event_name == 'pull_request_target' && needs.check_approvals.outputs.external_pr == 'true' && needs.check_approvals.outputs.check_approvals == 'true' }}
     runs-on:
       - self-hosted-nutanix-medium
     strategy:
@@ -73,13 +75,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: "${{ needs.event_and_ref.outputs.ref }}"
+          ref: "${{ needs.check_approvals.outputs.event_ref }}"
       - name: Empty OS matrix
         id: empty-os-matrix
         run: |
           echo "buildmatrix=$(jq -cn --arg os_list '' '{os: $os_list | split(",")}')" >> $GITHUB_ENV
       - name: Build OS matrix for all OS
-        if: needs.event_and_ref.outputs.event == 'workflow_run' || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
+        if: contains(github.event.pull_request.labels.*.name, 'integration_test') || contains(fromJson('["workflow_dispatch"]'), github.event_name) && github.event.inputs.os == 'all'
         id: build-os-matrix
         run: |
           DYNAMICOSLIST=$(make list-os-versions | head -c -1  | tr '\n' ',')
