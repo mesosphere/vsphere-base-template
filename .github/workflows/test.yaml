@@ -50,7 +50,7 @@ env:
 
 jobs:
   check_approvals:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' && github.event.pull_request.base.repo.clone_url == github.event.pull_request.head.repo.clone_url || github.event_name == 'pull_request_target' && github.event.pull_request.base.repo.clone_url != github.event.pull_request.head.repo.clone_url }}
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'integration_test') && ( github.event_name == 'pull_request' && github.event.pull_request.base.repo.clone_url == github.event.pull_request.head.repo.clone_url || github.event_name == 'pull_request_target' && github.event.pull_request.base.repo.clone_url != github.event.pull_request.head.repo.clone_url ) }}
     runs-on: self-hosted-nutanix-medium
     outputs:
       # return the status of the check_approvals job when event type is pull_request_target else return 'true'
