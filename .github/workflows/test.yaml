@@ -76,7 +76,6 @@ jobs:
       fail-fast: false
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-    if: ${{ needs.check_approvals.outputs.result == 'true' || contains(fromJson('["workflow_dispatch"]'), github.event_name) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
