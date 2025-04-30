@@ -1,12 +1,13 @@
 name: test base images
 on:
+  pull_request:
   pull_request_target:
     types:
       - labeled
       - opened
       - synchronize
-  pull_request_review:
-    types: [submitted]
+    branches:
+      - main
   # Enable manual invocation of this workflow GitHub Actions GUI
   workflow_dispatch:
     inputs:
@@ -49,49 +50,28 @@ env:
 
 jobs:
   check_approvals:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' && github.event.pull_request.base.repo.clone_url == github.event.pull_request.head.repo.clone_url || github.event_name == 'pull_request_target' && github.event.pull_request.base.repo.clone_url != github.event.pull_request.head.repo.clone_url }}
     runs-on: self-hosted-nutanix-medium
     outputs:
-      result: ${{ steps.check_approvals.outputs.result }}
+      # return the status of the check_approvals job when event type is pull_request_target else return 'true'
+      check_approvals: ${{ github.event_name == 'pull_request_target' && steps.check_approvals.outputs.check_approvals || 'true' }}
+      external_pr: ${{ github.event.pull_request.base.repo.clone_url != github.event.pull_request.head.repo.clone_url }}
+      # set ref to pullgithub.event.pull_request.head.sha when pull_request_target or pull_request event or set to github.ref when workflow_dispatch event
+      event_ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.event_name == 'pull_request_target' && github.event.pull_request.head.sha }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Check for required approvals and integration_test label
+      - name: Check integration test allowance status
+        if: ${{ github.event_name == 'pull_request_target' }}
         id: check_approvals
-        uses: actions/github-script@v6
-        if: github.event_name != 'workflow_dispatch'
+        uses: nutanix-cloud-native/action-check-approvals@main
         with:
-          script: |
-            const prNumber = context.payload.pull_request.number;
-            const { data: reviews } = await github.rest.pulls.listReviews({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-
-            const approvedReviews = reviews.filter(review => review.state === 'APPROVED');
-            const requiredApprovals = 1;  // Set the number of required approvals here
-
-            const labels = context.payload.pull_request.labels.map(label => label.name);
-            const hasIntegrationTestLabel = labels.includes('integration_test') || labels.includes('skip_integration');
-
-            console.log(`Approvals: ${approvedReviews.length}`);
-            console.log(`Required approvals: ${requiredApprovals}`);
-
-            if (approvedReviews.length < requiredApprovals) {
-              core.setFailed(`Required approvals not met. Current approvals: ${approvedReviews.length}`);
-            }
-            if (!hasIntegrationTestLabel) {
-              core.setFailed('The integration_test label is required to run the integration tests');
-            }
-
-            return approvedReviews.length >= requiredApprovals && hasIntegrationTestLabel;
+          approval_labels: 'integration_test'
 
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   build_list:
     runs-on:
       - self-hosted-nutanix-medium
     needs: check_approvals
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' && needs.check_approvals.outputs.external_pr == 'false' || github.event_name == 'pull_request_target' && needs.check_approvals.outputs.external_pr == 'true' && needs.check_approvals.outputs.check_approvals == 'true' }}
     strategy:
       fail-fast: false
     outputs:
