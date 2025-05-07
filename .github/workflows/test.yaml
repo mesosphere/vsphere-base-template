@@ -21,7 +21,6 @@ on:
           - ubuntu-22
           - os-ubuntu
           - rocky-8.7
-          - rocky-9.1
           - os-rocky
           - centos-7.9
           - os-centos
