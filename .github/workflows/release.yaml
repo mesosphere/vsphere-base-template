@@ -5,7 +5,9 @@ env:
   VSPHERE_USERNAME: ${{ secrets.VSPHERE_NKP_SRE_USERNAME }}
   VSPHERE_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
   VSPHERE_SERVER: ${{ secrets.VSPHERE_NKP_SERVER }}
-  GOVC_URL: ${{ secrets.VSPHERE_NKP_SRE_USERNAME }}:${{ secrets.VSPHERE_SRE_PASSWORD }}@${{ secrets.VSPHERE_NKP_SERVER }}
+  GOVC_USERNAME: ${{ secrets.VSPHERE_NKP_SRE_USERNAME }}
+  GOVC_PASSWORD: ${{ secrets.VSPHERE_SRE_PASSWORD }}
+  GOVC_URL: ${{ secrets.VSPHERE_NKP_SERVER }}
   PKR_VAR_vsphere_cluster: ${{ secrets.VSPHERE_CLUSTER }}
   PKR_VAR_vsphere_datacenter: ${{ secrets.VSPHERE_DATACENTER }}
   PKR_VAR_vsphere_datastore: ${{ secrets.VSPHERE_NKP_DATASTORE }}
@@ -31,6 +33,8 @@ on:
           - os-ubuntu
           - rocky-8.7
           - rocky-9.1
+          - rocky-9.5
+          - rocky-9.6
           - os-rocky
           - centos-7.9
           - os-centos
