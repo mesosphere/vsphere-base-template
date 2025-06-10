@@ -60,15 +60,19 @@ rocky-9.1-test: manifests/tests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.cle
 rocky-9.1-test-clean: rocky-9.1-test manifests/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).json.clean
 #rocky-9.5-test: manifests/tests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
 #rocky-9.5-test-clean: rocky-9.5-test manifests/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).json.clean
-rocky-test: rocky-8.7-test-clean rocky-9.1-test-clean #rocky-9.5-test-clean
+rocky-9.6-test: manifests/tests/d2iq-base-RockyLinux-9.6$(NAME_POSTFIX).json.clean
+rocky-9.6-test-clean: rocky-9.6-test manifests/d2iq-base-RockyLinux-9.6$(NAME_POSTFIX).json.clean
+rocky-test: rocky-8.7-test-clean rocky-9.1-test-clean rocky-9.6-test-clean #rocky-9.5-test-clean
 rocky-8.7-release: rocky-8.7-test release/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX)
 rocky-9.1-release: rocky-9.1-test release/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX)
 #rocky-9.5-release: rocky-9.5-test release/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX)
-rocky-release: rocky-8.7-release rocky-9.1-release #rocky-9.5-release
+rocky-9.6-release: rocky-9.6-test release/d2iq-base-RockyLinux-9.6$(NAME_POSTFIX)
+rocky-release: rocky-8.7-release rocky-9.1-release rocky-9.6-release #rocky-9.5-release
 rocky-8.7-ovf: manifests/ovf/d2iq-base-RockyLinux-8.7$(NAME_POSTFIX).ovf
 rocky-9.1-ovf: manifests/ovf/d2iq-base-RockyLinux-9.1$(NAME_POSTFIX).ovf
 #rocky-9.5-ovf: manifests/ovf/d2iq-base-RockyLinux-9.5$(NAME_POSTFIX).ovf
-rocky-ovf: rocky-8.7-ovf rocky-9.1-ovf #rocky-9.5-ovf
+rocky-9.6-ovf: manifests/ovf/d2iq-base-RockyLinux-9.6$(NAME_POSTFIX).ovf
+rocky-ovf: rocky-8.7-ovf rocky-9.1-ovf rocky-9.6-ovf #rocky-9.5-ovf
 
 centos: manifests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json
 centos-7.9-test: manifests/tests/d2iq-base-CentOS-7.9$(NAME_POSTFIX).json.clean
