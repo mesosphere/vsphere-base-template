@@ -31,6 +31,7 @@ on:
           - all
           - ubuntu-20
           - ubuntu-22
+          - ubuntu-24
           - os-ubuntu
           - rocky-8.7
           - rocky-9.1
@@ -134,6 +135,7 @@ jobs:
         os: 
           - ubuntu-20
           - ubuntu-22
+          - ubuntu-24
           - rocky-8.7
           - rocky-9.1
     steps:
