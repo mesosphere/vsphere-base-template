@@ -31,9 +31,10 @@ dpkg --list \
 
 echo "remove all development packages"
 dpkg --list \
-    | awk '{ print $2 }' \
-    | grep -- '-dev\(:[a-z0-9]\+\)\?$' \
-    | xargs apt-get -y purge;
+  | awk '{ print $2 }' \
+  | grep -- '-dev\(:[a-z0-9]\+\)\?$' \
+  | grep -vE 'systemd|init' \
+  | xargs apt-get -y purge
 
 echo "remove docs packages"
 dpkg --list \
