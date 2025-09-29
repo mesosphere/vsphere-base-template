@@ -108,14 +108,18 @@ rhel-8.10-ovf: manifests/ovf/d2iq-base-RHEL-810$(NAME_POSTFIX).ovf
 rhel-9.4-ovf: manifests/ovf/d2iq-base-RHEL-94$(NAME_POSTFIX).ovf
 rhel-ovf: rhel-8.4-ovf rhel-8.6-ovf rhel-8.8-ovf rhel-8.10-ovf rhel-9.4-ovf
 
-oraclelinux: manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json
+oraclelinux: manifests/d2iq-base-OracleLinux-810$(NAME_POSTFIX).json manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json
+oraclelinux-8.10-test: manifests/tests/d2iq-base-OracleLinux-810$(NAME_POSTFIX).json.clean
+oraclelinux-8.10-test-clean: oraclelinux-8.10-test manifests/d2iq-base-OracleLinux-810$(NAME_POSTFIX).json.clean
 oraclelinux-9.4-test: manifests/tests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
 oraclelinux-9.4-test-clean: oraclelinux-9.4-test manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json.clean
-oraclelinux-test: oraclelinux-9.4-test-clean
+oraclelinux-test: oraclelinux-8.10-test-clean oraclelinux-9.4-test-clean
+oraclelinux-8.10-release: oraclelinux-8.10-test release/d2iq-base-OracleLinux-810$(NAME_POSTFIX)
 oraclelinux-9.4-release: oraclelinux-9.4-test release/d2iq-base-OracleLinux-94$(NAME_POSTFIX)
-oraclelinux-release: oraclelinux-9.4-release
+oraclelinux-release: oraclelinux-8.10-release oraclelinux-9.4-release
+oraclelinux-8.10-ovf: manifests/ovf/d2iq-base-OracleLinux-810$(NAME_POSTFIX).ovf
 oraclelinux-9.4-ovf: manifests/ovf/d2iq-base-OracleLinux-94$(NAME_POSTFIX).ovf
-oraclelinux-ovf: oraclelinux-9.4-ovf
+oraclelinux-ovf: oraclelinux-8.10-ovf oraclelinux-9.4-ovf
 
 flatcar: manifests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
 flatcar-3033.3.16-test: manifests/tests/d2iq-base-Flatcar-3033.3.16$(NAME_POSTFIX).json
