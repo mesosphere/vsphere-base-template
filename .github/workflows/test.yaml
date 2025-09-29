@@ -140,4 +140,4 @@ jobs:
           sudo apt-get update && sudo apt-get -y install xorriso
           curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
       - name: Run integration tests for ${{ matrix.os }}
-        run: make ${{ matrix.os }}-test
+        run: make ${{ matrix.os }}-test-clean
