@@ -1,6 +1,10 @@
 name: test base images
 on:
   pull_request:
+    types:
+      - labeled
+      - opened
+      - synchronize
   pull_request_target:
     types:
       - labeled
@@ -70,6 +74,9 @@ jobs:
         uses: nutanix-cloud-native/action-check-approvals@v1
         with:
           approval_labels: 'integration_test'
+      - name: Dummy step for pull_request events
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+        run: echo "Job completed for ${{ github.event_name }} event"
 
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   build_list:
