@@ -1,6 +1,10 @@
 name: test base images
 on:
   pull_request:
+    types:
+      - labeled
+      - opened
+      - synchronize
   pull_request_target:
     types:
       - labeled
@@ -35,6 +39,7 @@ on:
           - rhel-9.6
           - os-rhel
           - oraclelinux-9.4
+          - oraclelinux-8.10
           - os-oraclelinux
           - flatcar-3033.3.16
           - os-flatcar
@@ -53,6 +58,7 @@ env:
   RHN_SUBSCRIPTION_ORG: ${{ secrets.RHN_SUBSCRIPTION_ORG }}
   RHN_SUBSCRIPTION_KEY: ${{ secrets.RHN_SUBSCRIPTION_KEY }}
   PACKER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NAME_POSTFIX: "-gh-run-${{ github.run_id }}"
 
 jobs:
   check_approvals:
@@ -71,6 +77,9 @@ jobs:
         uses: nutanix-cloud-native/action-check-approvals@v1
         with:
           approval_labels: 'integration_test'
+      - name: Dummy step for pull_request events
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+        run: echo "Job completed for ${{ github.event_name }} event"
 
   # Build matrix to test when label integration_test is added to PR or manually invoked.
   build_list:
@@ -133,4 +142,4 @@ jobs:
           sudo apt-get update && sudo apt-get -y install xorriso
           curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | sudo tar -C /usr/local/bin -xvzf - govc
       - name: Run integration tests for ${{ matrix.os }}
-        run: make ${{ matrix.os }}-test
+        run: make ${{ matrix.os }}-test-clean
