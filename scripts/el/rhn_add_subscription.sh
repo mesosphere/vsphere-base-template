@@ -22,7 +22,7 @@ fi
 # 
 subscription-manager release --set="${VERSION_ID}"
 
-# el 8.10 does not have extened support so we need to disable it
+# el 8.10 does not have extended support so we need to disable it
 if [[ "${VERSION_ID}" == "8.10" ]]; then
     subscription-manager repos --disable=rhel-8-for-x86_64-baseos-eus-rpms
     subscription-manager repos --disable=rhel-8-for-x86_64-appstream-eus-rpms
