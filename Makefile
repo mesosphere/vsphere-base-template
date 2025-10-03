@@ -11,7 +11,7 @@ PACKER_CACHE_DIR ?= ./packer_cache
 PACKER_ON_ERROR ?= cleanup
 
 manifests/d2iq-base-%$(NAME_POSTFIX).json: packer.initialized vsphere.pkr.hcl $(GOVC)
-	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=$(shell basename -s .json $@) -var vm_name_prefix="" -var vm_name_postfix="" -on-error="$(PACKER_ON_ERROR)"  -var-file=./images/base-$*.pkrvar.hcl -var manifest_output=$@ vsphere.pkr.hcl
+	PACKER_LOG=2 $(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=$(shell basename -s .json $@) -var vm_name_prefix="" -var vm_name_postfix="" -on-error="$(PACKER_ON_ERROR)"  -var-file=./images/base-$*.pkrvar.hcl -var manifest_output=$@ vsphere.pkr.hcl
 
 .PHONY: manifests/d2iq-base-%$(NAME_POSTFIX).json.clean
 manifests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/d2iq-base-%$(NAME_POSTFIX).json
@@ -19,7 +19,7 @@ manifests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/d2iq-base-%$(NAME_POS
 	mv $< $@
 
 manifests/tests/d2iq-base-%$(NAME_POSTFIX).json: manifests/d2iq-base-%$(NAME_POSTFIX).json clone-test.pkr.hcl
-	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ -on-error="$(PACKER_ON_ERROR)" clone-test.pkr.hcl
+	PACKER_LOG=2 $(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ -on-error="$(PACKER_ON_ERROR)" clone-test.pkr.hcl
 
 manifests/ovf/d2iq-base-%$(NAME_POSTFIX).ovf: manifests/d2iq-base-%$(NAME_POSTFIX).json
 	bash mkinclude/helper_markasvm.sh $(VSPHERE_FOLDER)/d2iq-base-$* "" $(shell jq -r '.builds[0].custom_data.resource_pool' $<)
