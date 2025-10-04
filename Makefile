@@ -11,7 +11,7 @@ PACKER_CACHE_DIR ?= ./packer_cache
 PACKER_ON_ERROR ?= cleanup
 
 manifests/d2iq-base-%$(NAME_POSTFIX).json: packer.initialized vsphere.pkr.hcl $(GOVC)
-	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=$(shell basename -s .json $@) -var vm_name_prefix="" -var vm_name_postfix="" -on-error="$(PACKER_ON_ERROR)"  -var-file=./images/base-$*.pkrvar.hcl -var manifest_output=$@ vsphere.pkr.hcl
+	PACKER_LOG=2 $(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=$(shell basename -s .json $@) -var vm_name_prefix="" -var vm_name_postfix="" -on-error="$(PACKER_ON_ERROR)"  -var-file=./images/base-$*.pkrvar.hcl -var manifest_output=$@ vsphere.pkr.hcl
 
 .PHONY: manifests/d2iq-base-%$(NAME_POSTFIX).json.clean
 manifests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/d2iq-base-%$(NAME_POSTFIX).json
@@ -19,7 +19,7 @@ manifests/d2iq-base-%$(NAME_POSTFIX).json.clean: manifests/d2iq-base-%$(NAME_POS
 	mv $< $@
 
 manifests/tests/d2iq-base-%$(NAME_POSTFIX).json: manifests/d2iq-base-%$(NAME_POSTFIX).json clone-test.pkr.hcl
-	$(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ -on-error="$(PACKER_ON_ERROR)" clone-test.pkr.hcl
+	PACKER_LOG=2 $(PACKER) build -force -var vsphere_folder=$(VSPHERE_FOLDER) -var vm_name=test-$(shell basename -s .json $<) -var template_manifest=$< -var manifest_output=$@ -on-error="$(PACKER_ON_ERROR)" clone-test.pkr.hcl
 
 manifests/ovf/d2iq-base-%$(NAME_POSTFIX).ovf: manifests/d2iq-base-%$(NAME_POSTFIX).json
 	bash mkinclude/helper_markasvm.sh $(VSPHERE_FOLDER)/d2iq-base-$* "" $(shell jq -r '.builds[0].custom_data.resource_pool' $<)
@@ -94,19 +94,23 @@ rhel-8.10-test: manifests/tests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
 rhel-8.10-test-clean: rhel-8.10-test manifests/d2iq-base-RHEL-810$(NAME_POSTFIX).json.clean
 rhel-9.4-test: manifests/tests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
 rhel-9.4-test-clean: rhel-9.4-test manifests/d2iq-base-RHEL-94$(NAME_POSTFIX).json.clean
-rhel-test: rhel-8.4-test-clean rhel-8.6-test-clean rhel-8.8-test-clean rhel-8.10-test-clean rhel-9.4-test-clean
+rhel-9.6-test: manifests/tests/d2iq-base-RHEL-96$(NAME_POSTFIX).json.clean
+rhel-9.6-test-clean: rhel-9.6-test manifests/d2iq-base-RHEL-96$(NAME_POSTFIX).json.clean
+rhel-test: rhel-8.4-test-clean rhel-8.6-test-clean rhel-8.8-test-clean rhel-8.10-test-clean rhel-9.4-test-clean rhel-9.6-test-clean
 rhel-8.4-release: rhel-8.4-test release/d2iq-base-RHEL-84$(NAME_POSTFIX)
 rhel-8.6-release: rhel-8.6-test release/d2iq-base-RHEL-86$(NAME_POSTFIX)
 rhel-8.8-release: rhel-8.8-test release/d2iq-base-RHEL-88$(NAME_POSTFIX)
 rhel-8.10-release: rhel-8.10-test release/d2iq-base-RHEL-810$(NAME_POSTFIX)
 rhel-9.4-release: rhel-9.4-test release/d2iq-base-RHEL-94$(NAME_POSTFIX)
-rhel-release: rhel-8.4-release rhel-8.6-release rhel-8.8-release rhel-8.10-release rhel-9.4-release
+rhel-9.6-release: rhel-9.6-test release/d2iq-base-RHEL-96$(NAME_POSTFIX)
+rhel-release: rhel-8.4-release rhel-8.6-release rhel-8.8-release rhel-8.10-release rhel-9.4-release rhel-9.6-release
 rhel-8.4-ovf: manifests/ovf/d2iq-base-RHEL-84$(NAME_POSTFIX).ovf
 rhel-8.6-ovf: manifests/ovf/d2iq-base-RHEL-86$(NAME_POSTFIX).ovf
 rhel-8.8-ovf: manifests/ovf/d2iq-base-RHEL-88$(NAME_POSTFIX).ovf
 rhel-8.10-ovf: manifests/ovf/d2iq-base-RHEL-810$(NAME_POSTFIX).ovf
 rhel-9.4-ovf: manifests/ovf/d2iq-base-RHEL-94$(NAME_POSTFIX).ovf
-rhel-ovf: rhel-8.4-ovf rhel-8.6-ovf rhel-8.8-ovf rhel-8.10-ovf rhel-9.4-ovf
+rhel-9.6-ovf: manifests/ovf/d2iq-base-RHEL-96$(NAME_POSTFIX).ovf
+rhel-ovf: rhel-8.4-ovf rhel-8.6-ovf rhel-8.8-ovf rhel-8.10-ovf rhel-9.4-ovf rhel-9.6-ovf
 
 oraclelinux: manifests/d2iq-base-OracleLinux-810$(NAME_POSTFIX).json manifests/d2iq-base-OracleLinux-94$(NAME_POSTFIX).json
 oraclelinux-8.10-test: manifests/tests/d2iq-base-OracleLinux-810$(NAME_POSTFIX).json.clean
