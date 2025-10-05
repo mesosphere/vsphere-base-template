@@ -105,3 +105,9 @@ rm -f /var/lib/systemd/random-seed
 echo "clear the history so our install isn't there"
 rm -f /root/.wget-hsts
 export HISTSIZE=0
+
+echo "Removing ds=nocloud from GRUB_CMDLINE_LINUX_DEFAULT..."
+sed -i 's/\bds=nocloud\b//g' /etc/default/grub
+
+echo "Updating GRUB..."
+update-grub

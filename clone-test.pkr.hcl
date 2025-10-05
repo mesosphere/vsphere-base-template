@@ -134,11 +134,11 @@ local-hostname: ${var.vm_name}
 network:
   version: 2
   ethernets:
-    nics:
+    nic0:
       match:
         name: ens*
       dhcp4: yes
-    nics:
+    nic1:
       match:
         name: eth*
       dhcp4: yes
