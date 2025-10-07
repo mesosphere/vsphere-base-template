@@ -31,9 +31,10 @@ dpkg --list \
 
 echo "remove all development packages"
 dpkg --list \
-    | awk '{ print $2 }' \
-    | grep -- '-dev\(:[a-z0-9]\+\)\?$' \
-    | xargs apt-get -y purge;
+  | awk '{ print $2 }' \
+  | grep -- '-dev\(:[a-z0-9]\+\)\?$' \
+  | grep -vE 'systemd|init' \
+  | xargs apt-get -y purge
 
 echo "remove docs packages"
 dpkg --list \
@@ -104,3 +105,9 @@ rm -f /var/lib/systemd/random-seed
 echo "clear the history so our install isn't there"
 rm -f /root/.wget-hsts
 export HISTSIZE=0
+
+echo "Removing ds=nocloud from GRUB_CMDLINE_LINUX_DEFAULT..."
+sed -i 's/\bds=nocloud\b//g' /etc/default/grub
+
+echo "Updating GRUB..."
+update-grub

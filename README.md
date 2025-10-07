@@ -48,7 +48,7 @@ Flatcar expects ignition config in `guestinfo.ignition.config.data` and its form
 
 There are distribution based make targets for building images
 
-- `make ubuntu` - Ubuntu 20.04 and 22.04
+- `make ubuntu` - Ubuntu 20.04, 22.04 and 24.04
 - `make rocky` - Rocky 8.7, 9.1, 9.5, 9.6
 - `make centos` - Centos 7.9
 - `make oraclelinux` - OracleLinux 9.10

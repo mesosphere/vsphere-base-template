@@ -267,6 +267,16 @@ locals {
     "<enter>"
   ]
 
+  ubuntu_noble_bootcommand = [
+    "c<wait>",
+    "linux /casper/vmlinuz --- autoinstall ds=nocloud text",
+    "<enter><wait>",
+    "initrd /casper/initrd",
+    "<enter><wait>",
+    "boot",
+    "<enter>"
+  ]
+
   flatcar_bootcommand = [
     "<wait><wait><wait>",
     "sudo mkdir /bootfiles<enter>",
@@ -284,6 +294,7 @@ locals {
     "Ubuntu-18.04" = local.ubuntu_bionic_bootcommand
     "Ubuntu-20.04" = local.ubuntu_bootcommand
     "Ubuntu-22.04" = local.ubuntu_jammy_bootcommand
+    "Ubuntu-24.04" = local.ubuntu_noble_bootcommand
     "Flatcar"      = local.flatcar_bootcommand
   }
 

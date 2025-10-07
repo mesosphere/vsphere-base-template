@@ -21,6 +21,10 @@ rm -Rf /var/lib/cloud/data/scripts \
        /var/lib/cloud/scripts/per-instance \
        /var/lib/cloud/data/user-data* \
        /var/lib/cloud/instance \
-       /var/lib/cloud/instances/*
+       /var/lib/cloud/instances/* \
+       /etc/cloud/cloud-init.disabled
 
 cloud-init clean --logs
+
+# ensure cloud-init is enabled
+systemctl enable cloud-init
