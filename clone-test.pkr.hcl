@@ -123,8 +123,7 @@ locals {
 users:
   - name: ${local.ssh_username}
     sudo: ALL=(ALL) NOPASSWD:ALL
-    groups: sudo, wheel
-    lock_passwd: true
+    groups: sudo
     ssh_authorized_keys:
       - ${var.ssh_public_key == "" ? data.sshkey.install.public_key : var.ssh_public_key}
 EOF
