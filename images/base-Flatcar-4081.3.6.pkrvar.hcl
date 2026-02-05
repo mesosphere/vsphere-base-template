@@ -1,0 +1,5 @@
+distribution="Flatcar"
+distribution_version="4081.3.6"
+iso_url="https://lts.release.flatcar-linux.net/amd64-usr/4081.3.6/flatcar_production_iso_image.iso"
+iso_checksum="e9cead04863ea5b681840b13994b582d5ea26e32636448ba897d0fa51ea86e2af2a20685c4914174699788a6daf61b0eb37c70a1f6d45414c313dbd305bdef4f"
+bootconfig_type="ignition"
