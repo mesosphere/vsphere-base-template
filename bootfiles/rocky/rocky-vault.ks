@@ -60,7 +60,7 @@ open-vm-tools
 %end
 
 # Enable/disable the following services
-services --enabled=sshd
+services --enabled=NetworkManager,sshd
 
 %post --logfile=/mnt/sysimage/root/ks-post.log --erroronfail
 # Disable quiet boot and splash screen
