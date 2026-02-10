@@ -53,14 +53,17 @@ openssh-server
 sed
 sudo
 python3
-open-vm-tools
+
+# Exclude open-vm-tools from group install - it requires dbus-tools which is not
+# on the minimal ISO. It will be installed in %post via dnf with full repo access.
+-open-vm-tools
 
 # Exclude unnecessary firmwares
 -iwl*firmware
 %end
 
 # Enable/disable the following services
-services --enabled=NetworkManager,sshd
+services --enabled=sshd
 
 %post --logfile=/mnt/sysimage/root/ks-post.log --erroronfail
 # Disable quiet boot and splash screen

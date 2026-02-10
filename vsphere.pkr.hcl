@@ -230,17 +230,6 @@ locals {
     " inst.ks=hd:sr1:/bootfile.cfg<enter>"
   ]
 
-  # GRUB2-style boot command for newer EL ISOs that use GRUB2 for BIOS boot.
-  # Sends <up> to interrupt the countdown, enters edit mode with 'e',
-  # navigates to the kernel line, appends kickstart, then boots with Ctrl+X.
-  el_grub2_bootcommand = [
-    "<up><wait3>",
-    "e<wait>",
-    "<down><down><end><wait>",
-    " inst.ks=hd:sr1:/bootfile.cfg",
-    "<leftCtrlOn>x<leftCtrlOff>"
-  ]
-
   ubuntu_bionic_bootcommand = [
     "<wait>e<down><down><down><end><wait>",
     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -297,12 +286,11 @@ locals {
 
   # lookup by <distro_name>-<distro_version> fallback to <distro_name>
   distro_boot_command_lookup = {
-    "RHEL-7"            = local.el_old_bootcommand
-    "RHEL"              = local.el_bootcommand
-    "CentOS"            = local.el_old_bootcommand
-    "RockyLinux"        = local.el_bootcommand
-    "RockyLinux-9.7"    = local.el_grub2_bootcommand
-    "OracleLinux"       = local.el_bootcommand
+    "RHEL-7"       = local.el_old_bootcommand
+    "RHEL"         = local.el_bootcommand
+    "CentOS"       = local.el_old_bootcommand
+    "RockyLinux"   = local.el_bootcommand
+    "OracleLinux"  = local.el_bootcommand
     "Ubuntu-18.04" = local.ubuntu_bionic_bootcommand
     "Ubuntu-20.04" = local.ubuntu_bootcommand
     "Ubuntu-22.04" = local.ubuntu_jammy_bootcommand
@@ -319,8 +307,7 @@ locals {
   default_bootwait = "10s"
   # lookup by <distro_name>-<distro_version> fallback to <distro_version> fallback to local.default_bootwait
   distro_bootwait_lookup = {
-    "Ubuntu"         = "1s",
-    "RockyLinux-9.7" = "10s"
+    "Ubuntu" = "1s"
   }
 
   # lookup by <distro_name>-<distro_version> fallback to <distro_version> fallback to ""
