@@ -4,14 +4,8 @@
 cat <<EOF >/tmp/ignition.json
 {
   "ignition": {
-    "config": {},
-    "security": {
-      "tls": {}
-    },
-    "timeouts": {},
-    "version": "2.3.0"
+    "version": "3.3.0"
   },
-  "networkd": {},
   "passwd": {
     "users": [
       {
@@ -22,11 +16,10 @@ cat <<EOF >/tmp/ignition.json
       }
     ]
   },
-  "storage": {},
   "systemd": {
     "units": [
       {
-        "enable": true,
+        "enabled": true,
         "name": "docker.service"
       },
       {
