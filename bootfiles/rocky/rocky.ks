@@ -53,7 +53,10 @@ openssh-server
 sed
 sudo
 python3
-open-vm-tools
+
+# Exclude open-vm-tools from group install - it requires dbus-tools which is not
+# on the minimal ISO. It will be installed in %post via dnf with full repo access.
+-open-vm-tools
 
 # Exclude unnecessary firmwares
 -iwl*firmware
