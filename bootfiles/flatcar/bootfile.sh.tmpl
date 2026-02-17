@@ -22,7 +22,17 @@ cat <<EOF >/tmp/ignition.json
       }
     ]
   },
-  "storage": {},
+  "storage": {
+    "files": [
+      {
+        "path": "/usr/local/bin/set-hostname-from-guestinfo",
+        "mode": 493,
+        "contents": {
+          "source": "data:text/plain;base64,IyEvYmluL2Jhc2gKIyBTZXQgaG9zdG5hbWUgZnJvbSBndWVzdGluZm8ubWV0YWRhdGEgZm9yIENBUFYKc2V0IC1ldW8gcGlwZWZhaWwKCiMgR2V0IG1ldGFkYXRhIGlmIGl0IGV4aXN0cwppZiAhIG1ldGFkYXRhPSQodm13YXJlLXJwY3Rvb2wgJ2luZm8tZ2V0IGd1ZXN0aW5mby5tZXRhZGF0YScgMj4vZGV2L251bGwpOyB0aGVuCiAgZXhpdCAwCmZpCgojIERlY29kZSBpZiBiYXNlNjQKZW5jb2Rpbmc9JCh2bXdhcmUtcnBjdG9vbCAnaW5mby1nZXQgZ3Vlc3RpbmZvLm1ldGFkYXRhLmVuY29kaW5nJyAyPi9kZXYvbnVsbCB8fCBlY2hvICIiKQppZiBbICIkZW5jb2RpbmciID0gImJhc2U2NCIgXTsgdGhlbgogIG1ldGFkYXRhPSQoZWNobyAiJG1ldGFkYXRhIiB8IGJhc2U2NCAtZCkKZmkKCiMgRXh0cmFjdCBob3N0bmFtZSAoQ0FQViB1c2VzICJsb2NhbC1ob3N0bmFtZSIpCmhvc3RuYW1lPSQoZWNobyAiJG1ldGFkYXRhIiB8IGF3ayAnL15sb2NhbC1ob3N0bmFtZTp8XiAgbG9jYWwtaG9zdG5hbWU6L3tnc3ViKCJeWyBcdF0qKGxvY2FsLSk/aG9zdG5hbWU6WyBcdF0qIiwiIik7IGdzdWIoIlwiIiwiIik7IHByaW50OyBleGl0fScpCmlmIFsgLW4gIiRob3N0bmFtZSIgXTsgdGhlbgogIGVjaG8gIiRob3N0bmFtZSIgPiAvZXRjL2hvc3RuYW1lCiAgaG9zdG5hbWVjdGwgc2V0LWhvc3RuYW1lICIkaG9zdG5hbWUiIDI+L2Rldi9udWxsIHx8IHRydWUKICAKICAjIEFsc28gcG9wdWxhdGUgY29yZW9zIG1ldGFkYXRhIGZpbGUgZm9yIGNvbXBhdGliaWxpdHkKICBta2RpciAtcCAvcnVuL21ldGFkYXRhCiAgZWNobyAiQ09SRU9TX0NVU1RPTV9IT1NUTkFNRT0ke2hvc3RuYW1lfSIgPj4gL3J1bi9tZXRhZGF0YS9jb3Jlb3MKZmkK"
+        }
+      }
+    ]
+  },
   "systemd": {
     "units": [
       {
@@ -36,6 +46,11 @@ cat <<EOF >/tmp/ignition.json
       {
         "mask": true,
         "name": "locksmithd.service"
+      },
+      {
+        "enable": true,
+        "name": "set-hostname.service",
+        "contents": "[Unit]\nDescription=Set hostname from guestinfo.metadata for CAPV\nDefaultDependencies=no\nAfter=systemd-networkd.service\nBefore=kubelet.service kubeadm.service\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/set-hostname-from-guestinfo\nRemainAfterExit=yes\n\n[Install]\nWantedBy=multi-user.target\n"
       }
     ]
   }
