@@ -41,7 +41,6 @@ on:
           - rhel-9.4
           - rhel-9.6
           - rhel-9.8
-          - rhel-9.8
           - os-rhel
           - oraclelinux-9.4
           - oraclelinux-8.10
